@@ -1,5 +1,22 @@
 <%- include ('../partials/head') %>
 
     <!-- Insert Code here -->
+    <main>
+        <div class="container">
+          <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+          <form action="/register" method="POST">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+          </form>
+          <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+      </main>
 
 <%- include ('../partials/footer') %>
