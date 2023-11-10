@@ -1,0 +1,56 @@
+<header>
+    <nav class="navbar navbar-expand-sm border-bottom">
+      <div class="container">
+        <button
+          class="navbar-toggler ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbar-collapse"
+          aria-controls="navbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="navbar-nav me-auto">
+            <!-- Home tab, only show if not on Home page -->
+            <li class="nav-item" id="nav-home">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <!-- Discover tab, only show if not on Discover page -->
+            <li class="nav-item" id="nav-discover">
+              <a class="nav-link" href="/discover">Discover</a>
+            </li>
+          </ul>
+          <!-- User and Logout in dropdown on the right -->
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <!-- Logout tab, as a dropdown item -->
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <script>
+    // JavaScript to hide the tab of the current page
+    // This script assumes you have a way to determine the current page, e.g., by a body class or a variable
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const currentPage = /* logic to determine the current page */;
+  
+      if (currentPage === 'home') {
+        document.getElementById('nav-home').style.display = 'none';
+      } else if (currentPage === 'discover') {
+        document.getElementById('nav-discover').style.display = 'none';
+      }
+      // Add similar conditions for other pages if necessary
+    });
+  </script>
+  
