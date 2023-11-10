@@ -1,66 +1,60 @@
-// *****************************************************
-// <!-- Section 1 : Import Dependencies -->
-// *****************************************************
 
-// *****************************************************
-// <!-- Section 2 : Connect to DB -->
-// *****************************************************
-const dbConfig = {
-    host: 'db', // the database server
-    port: 5432, // the database port
-    database: process.env.POSTGRES_DB, // the database name
-    user: process.env.POSTGRES_USER, // the user account to connect with
-    password: process.env.POSTGRES_PASSWORD, // the password of the user account
-  };
-  
-  const db = pgp(dbConfig);
-  
-  // test your database
-  db.connect()
-    .then(obj => {
-      console.log('Database connection successful'); // you can view this message in the docker compose logs
-      obj.done(); // success, release the connection;
-    })
-    .catch(error => {
-      console.log('ERROR:', error.message || error);
-    });
-// *****************************************************
-// <!-- Section 3 : App Settings -->
-// *****************************************************
-app.set('view engine', 'ejs'); // set the view engine to EJS
-app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
+// index.js
 
-// initialize session variables
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false,
-  })
-);
+const express = require('express');
+const { Pool } = require('pg');
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-// *****************************************************
-// <!-- Section 4 : API Routes -->
-// *****************************************************
-app.get('/', (req, res) =>{
-    res.redirect('/login');
+// Initialize express app
+const app = express();
+
+// Set up PostgreSQL connection using environment variables directly
+const pool = new Pool({
+  user: process.env.POSTGRES_USER,
+  host: 'db', // This is the service name defined in docker-compose.yaml
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  port: 5432, // Default port for PostgreSQL
+});
+
+// Set up API key and URL from environment variables
+const API_KEY = process.env.API_KEY;
+const API_URL = process.env.API_URL;
+
+// Set the view engine to ejs
+app.set('view engine', 'ejs');
+
+// Define the directory that contains the EJS templates
+app.set('views', __dirname + '/views');
+
+// Static files middleware for resources like CSS
+app.use(express.static(__dirname + '/resource'));
+
+// Routes
+app.get('/', (req, res) => {
+  res.render('pages/home');
+});
+
+app.get('/discover', (req, res) => {
+  res.render('pages/discover');
+});
+
+app.get('/detail-product', (req, res) => {
+  res.render('pages/detail_product');
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login');
+  res.render('pages/login');
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register');
+  res.render('pages/register');
 });
-// *****************************************************
-// <!-- Section 5 : Start Server-->
-// *****************************************************
-// starting the server and keeping the connection open to listen for more requests
+
+app.get('/user', (req, res) => {
+  res.render('pages/user');
+});
+
+// Start the server
 app.listen(3000);
 console.log('Server is listening on port 3000');
+
