@@ -1,19 +1,25 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
 
-<%- include ('../partials/header') %>
+
+    <!-- Insert Code here -->
 
 <main>
   <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <h1>Login</h1>
     <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="username" id="username" name="username" />
-      
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" />
-      
+        <label for="username">Name:</label>
+        <input type="text" id="username" name="username" />
+  
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" />
+  
         <input type="submit" value="Submit" />
-      </form>
+    </form>
   </div>
 </main>
+
 
 <%- include ('../partials/footer') %>
 
