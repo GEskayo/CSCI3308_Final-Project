@@ -1,6 +1,19 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu', { pageType: 'home' }) %>
 
-    <!-- Insert Code here -->
+<main>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Need to create a search API to get it to work -->
+                <form action="/search" method="GET">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search..." name="query">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
 
 <%- include ('../partials/footer') %>
