@@ -1,26 +1,36 @@
+<!-- Include the 'head' partial for common head elements like CSS links, meta tags, etc. -->
 <%- include ('../partials/head') %>
+
+<!-- Include the 'menu' partial with 'pageType' set to 'register' for the navigation menu -->
 <%- include ('../partials/menu', { pageType: 'register' }) %>
 
 <main>
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-5">
+        <!-- Registration card container -->
         <div class="card border-0">
           <div class="card-body">
+            <!-- Registration form heading -->
             <h1 class="text-center mb-4">Register</h1>
+            <!-- Registration form, POST method sends data to server -->
             <form action="/register" method="POST">
+              <!-- Username input field -->
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" id="username" name="username" class="form-control" required>
               </div>
+              <!-- Password input field -->
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" id="password" name="password" class="form-control" required>
               </div>
+              <!-- Submit button for the form -->
               <div class="d-grid gap-2">
                 <input type="submit" value="Register" class="btn btn-primary">
               </div>
             </form>
+            <!-- Link to login page for users who already have an account -->
             <div class="text-center mt-3">
               <p>Already have an account? <a href="/login">Login</a></p>
             </div>
@@ -31,4 +41,5 @@
   </div>
 </main>
 
+<!-- Include the 'footer' partial for the page footer -->
 <%- include ('../partials/footer') %>

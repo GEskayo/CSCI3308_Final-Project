@@ -1,9 +1,11 @@
 <header>
+  <!-- Navigation bar -->
   <nav class="navbar navbar-expand-sm border-bottom">
     <div class="container">
-      <!-- Bold Company Title -->
+      <!-- Company title displayed on the navbar -->
       <span class="navbar-brand fw-bold">SkineeDipping</span>
 
+      <!-- Hamburger menu button for smaller screens -->
       <button
         class="navbar-toggler ms-auto"
         type="button"
@@ -15,30 +17,34 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      <!-- Navbar links container -->
       <div class="collapse navbar-collapse" id="navbar-collapse">
         <ul class="navbar-nav me-auto">
+          <!-- Conditional rendering of Home and Discover tabs based on the current page type -->
           <% /* Only show Home and Discover if not on login or register page */ %>
           <% if (pageType !== 'login' && pageType !== 'register') { %>
-            <!-- Home tab -->
+            <!-- Home tab in the navbar -->
             <li class="nav-item" id="nav-home">
               <a class="nav-link" href="/home">Home</a>
             </li>
-            <!-- Discover tab -->
+            <!-- Discover tab in the navbar -->
             <li class="nav-item" id="nav-discover">
               <a class="nav-link" href="/discover">Discover</a>
             </li>
           <% } %>
         </ul>
+        <!-- Conditional rendering of User dropdown based on the current page type -->
         <% /* Only show User dropdown if not on login or register page */ %>
         <% if (pageType !== 'login' && pageType !== 'register') { %>
-          <!-- User and Logout in dropdown on the right -->
+          <!-- User dropdown menu on the right side of the navbar -->
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 User
               </a>
+              <!-- Dropdown menu items -->
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <!-- Logout tab, as a dropdown item -->
+                <!-- Logout option in the dropdown menu -->
                 <li><a class="dropdown-item" href="/logout">Logout</a></li>
               </ul>
             </li>
