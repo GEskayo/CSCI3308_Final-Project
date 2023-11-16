@@ -75,6 +75,36 @@ app.get('/discover', (req, res) => {
   res.render('pages/discover');
 });
 
+app.get('/discover', async (req, res) =>{
+  axios({
+      url: `https://www.steamwebapi.com/steam/api/items`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: {
+        key: process.env.API_KEY,
+        game: '1',
+        sort_by: 'priceAz',
+        item_type: 'null',
+      },
+    })
+  .then(results => {
+      console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+  
+      res.render('views/pages/discover', {results: results.data});
+  })
+  .catch(error => {
+      // Handle errors
+      console.error(error);
+
+      res.render('views/pages/discover', {results: [], error: 'API call failed'});
+  });
+
+  //res.render('pages/discover');
+})
+
 app.get('/detail-product', (req, res) => {
   res.render('pages/detail_product');
 });
@@ -93,12 +123,12 @@ app.post('/login', async (req, res) => {
           if(data.length > 0){
               //const match = await bcrypt.compare(req.body.password, data[0].password);
               //console.log(match);
-              console.log(req.body.password);
-              console.log(data[0].password);
-              console.log(req.body.password.trim() === data[0].password.trim());
-              console.log(typeof req.body.password, typeof data[0].password);
-              console.log([...req.body.password].map(c => c.charCodeAt(0)));
-              console.log([...data[0].password].map(c => c.charCodeAt(0)));
+              // console.log(req.body.password);
+              // console.log(data[0].password);
+              // console.log(req.body.password.trim() === data[0].password.trim());
+              // console.log(typeof req.body.password, typeof data[0].password);
+              // console.log([...req.body.password].map(c => c.charCodeAt(0)));
+              // console.log([...data[0].password].map(c => c.charCodeAt(0)));
 
               
               if(req.body.password.trim() === data[0].password.trim()){
@@ -109,7 +139,8 @@ app.post('/login', async (req, res) => {
               }
               else{
                   console.log('Login failed, please try again');
-                  res.redirect('/login');
+                  res.json({status: 'Invalid input', message: 'Invalid input'});
+                  //res.redirect('/login');
               }
           }
          else {
@@ -128,6 +159,36 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.post('/register', async (req, res) => {
+  try {
+    // Check if the username already exists
+    const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
+    console.log(req.body.username);
+    
+    console.log(existingUser);
+    if (existingUser) {
+      // Username already exists, render the register page with an error message
+      res.json({status: 'Invalid input', message: 'Invalid input'});
+      //res.render('pages/register', { message: 'Username already exists. Please choose a different one.' });
+
+    } else {
+      // Username is unique, proceed with hashing the password
+      const hash = await bcrypt.hash(req.body.password, 10);
+
+      // Insert username and hashed password into 'users' table
+      await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+
+      // Redirect to GET /login route page after data has been inserted successfully
+      // Pass a query parameter for successful registration
+      res.json({status: 'Success', message: 'Success'});
+      //res.redirect('/login?registered=true');
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.render('pages/register', { message: 'An error occurred during registration. Please try again.' });
+  }
+});
+
 
 app.get('/user', (req, res) => {
   res.render('pages/user');
@@ -141,3 +202,12 @@ module.exports = app.listen(3000);
 //module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
 
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Use this middleware for any routes that require authentication
+app.use('/discover', auth);
