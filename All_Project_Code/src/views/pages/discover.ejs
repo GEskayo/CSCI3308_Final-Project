@@ -1,6 +1,59 @@
+<!-- Include the 'head' partial for common head elements like CSS links, meta tags, etc. -->
 <%- include ('../partials/head') %>
-<%- include ('../partials/menu') %>
 
-    <!-- <-- Insert Code here -->
+<!-- Include the 'menu' partial with 'pageType' set to 'discover' for the navigation menu -->
+<%- include ('../partials/menu', { pageType: 'discover' }) %>
 
+<div class="container mt-5">
+  <!-- Search bar section -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Search...">
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <!-- Left sidebar for displaying categories -->
+    <div class="col-md-2">
+      <h5>Categories</h5>
+      <ul class="list-unstyled">
+        <li><a href="#">Assault Rifle</a></li>
+        <li><a href="#">Submachine Gun</a></li>
+        <li><a href="#">Knives</a></li>
+        <li><a href="#">Secondaries</a></li>
+      </ul>
+    </div>
+
+    <!-- Main content area -->
+    <div class="col-md-8">
+      <!-- Content to be inserted here -->
+    </div>
+
+    <!-- Right sidebar for filters -->
+    <div class="col-md-2">
+      <h5>Filters</h5>
+      <!-- Filter for selecting condition -->
+      <div class="mb-3">
+        <label for="conditionFilter" class="form-label">Condition</label>
+        <select class="form-select" id="conditionFilter">
+          <option>Factory New</option>
+          <option>Minimal Wear</option>
+          <option>Field Tested</option>
+          <option>Well Worn</option>
+          <option>Battle Scarred</option>
+        </select>
+      </div>
+      <!-- Filter for sorting by price -->
+      <div class="mb-3">
+        <label for="priceSort" class="form-label">Sort by Price</label>
+        <select class="form-select" id="priceSort">
+          <option>High to Low</option>
+          <option>Low to High</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Include the 'footer' partial for the page footer -->
 <%- include ('../partials/footer') %>
