@@ -1,6 +1,25 @@
+<!-- Include the 'head' partial for common head elements like CSS links, meta tags, etc. -->
 <%- include ('../partials/head') %>
-<%- include ('../partials/menu') %>
 
-    <!-- <-- Insert Code here -->
+<!-- Include the 'menu' partial with 'pageType' set to 'home' for the navigation menu -->
+<%- include ('../partials/menu', { pageType: 'home' }) %>
 
+<main>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Search form, which sends a GET request to the '/search' route -->
+                <!-- Note: A search API needs to be implemented on the server for this to function -->
+                <form action="/search" method="GET">
+                    <div class="input-group mb-3">
+                        <!-- Input field for the search query -->
+                        <input type="text" class="form-control" placeholder="Search..." name="query">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Include the 'footer' partial for the page footer -->
 <%- include ('../partials/footer') %>

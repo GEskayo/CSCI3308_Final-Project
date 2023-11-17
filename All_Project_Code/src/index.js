@@ -2,6 +2,7 @@
 // <!-- Section 1 : Import Dependencies -->
 // *****************************************************
 
+
 const express = require('express'); // To build an application server or API
 const path = require('path');
 const app = express();
@@ -10,6 +11,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -35,16 +37,22 @@ db.connect()
   .catch(error => {
     console.log('ERROR:', error.message || error);
   });
-  
+
 // *****************************************************
 // <!-- Section 3 : App Settings -->
 // *****************************************************
+
 
 app.set('view engine', 'ejs'); // set the view engine to EJS
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 app.use(bodyParser.urlencoded({ extended: true }));
 // initialize session variables
 app.use(express.static(path.join(__dirname, 'init_data')));
+
+
+// Serve static files from the 'resource' directory
+app.use(express.static(path.join(__dirname, 'resource')));
+
 
 app.use(
   session({
@@ -53,6 +61,7 @@ app.use(
     resave: false,
   })
 );
+
 
 app.use(
   bodyParser.urlencoded({
@@ -66,51 +75,18 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
-// Routes
-app.get('/', (req, res) => {
-  res.render('pages/home');
+app.get("/", (req, res) => {
+  res.render("pages/login");
 });
-
-app.get('/discover', (req, res) => {
-  res.render('pages/discover');
-});
-
-// app.get('/discover', async (req, res) =>{
-//   axios({
-//       url: `https://www.steamwebapi.com/steam/api/items`,
-//       method: 'GET',
-//       dataType: 'json',
-//       headers: {
-//         'Accept-Encoding': 'application/json',
-//       },
-//       params: {
-//         key: process.env.API_KEY,
-//         game: '1',
-//         sort_by: 'priceAz',
-//         item_type: 'null',
-//       },
-//     })
-//   .then(results => {
-//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-      
-//       res.render('views/pages/discover', {results: results.data});
-//   })
-//   .catch(error => {
-//       // Handle errors
-//       console.error(error);
-
-//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
-//   });
-
-//   //res.render('pages/discover');
-// })
 
 app.get('/detail-product', (req, res) => {
   res.render('pages/detail_product');
+
 });
 
+// GET /login route
 app.get('/login', (req, res) => {
-  res.render('pages/login');
+  res.render('pages/login', { pageType: 'login', registered: req.query.registered });
 });
 
 app.post('/login', async (req, res) => {
@@ -197,6 +173,95 @@ app.get('/user', (req, res) => {
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
+
+
+// GET /home route
+app.get('/home', (req, res) => {
+  // Check if user is logged in
+  if (req.session.user) {
+    res.render('pages/home', { user: req.session.user }); // Render the home page
+  } else {
+    res.redirect('/login'); // Redirect to login if not logged in
+  }
+});
+
+// Discover
+  
+  res.render('pages/discover', { results: events });
+} catch (error) {
+  console.error('Error fetching events:', error);
+  res.render('pages/discover', { results: [] });
+}
+});
+
+
+// app.get('/discover', async (req, res) =>{
+//   axios({
+//       url: `https://www.steamwebapi.com/steam/api/items`,
+//       method: 'GET',
+//       dataType: 'json',
+//       headers: {
+//         'Accept-Encoding': 'application/json',
+//       },
+//       params: {
+//         key: process.env.API_KEY,
+//         game: '1',
+//         sort_by: 'priceAz',
+//         item_type: 'null',
+//       },
+//     })
+//   .then(results => {
+//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      
+//       res.render('views/pages/discover', {results: results.data});
+//   })
+//   .catch(error => {
+//       // Handle errors
+//       console.error(error);
+
+//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
+//   });
+
+//   //res.render('pages/discover');
+// })
+
+// GET /user route
+app.get('/user', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session.user) {
+        return res.status(401).send('User not authenticated');
+    }
+
+    try {
+        // Retrieve user data from the database
+        const userId = req.session.user.id; // Assuming the user's ID is stored in the session
+        const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
+
+        // Send the user data as a response
+        res.json(userData);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+// Logout
+app.get('/logout', (req, res) => {
+req.session.destroy(err => {
+    if(err) {
+        return res.redirect('/discover');
+    }
+
+    res.clearCookie('sid');
+    res.render('pages/login', { message: 'Logged out Successfully' });
+});
+});
+
+// *****************************************************
+// <!-- Section 5 : Start Server-->
+// *****************************************************
+
 // Start the server
 module.exports = app.listen(3000);
 //module.exports = app.listen(3000);

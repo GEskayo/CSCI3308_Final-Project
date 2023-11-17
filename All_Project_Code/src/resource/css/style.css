@@ -1,0 +1,14 @@
+/* Custom CSS to make the container full width */
+.container {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Set the background color of the body */
+body {
+    background-color: rgb(79, 79, 104);
+}
