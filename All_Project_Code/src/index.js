@@ -86,18 +86,21 @@ app.get('/detail-product', (req, res) => {
 
 // GET /login route
 app.get('/login', (req, res) => {
-  res.render('pages/login', { pageType: 'login', registered: req.query.registered });
+  res.render('pages/login');
 });
 
 app.post('/login', async (req, res) => {
   const query = 'SELECT * FROM users WHERE username = $1';
   const username = req.body.username;
   const values = [username];
+  console.log(query);
+  console.log(username);
+  console.log(values);
 
   db.any(query, values)
       .then(async function (data) {
           if(data.length > 0){
-              //const match = await bcrypt.compare(req.body.password, data[0].password);
+              const match = await bcrypt.compare(req.body.password, data[0].password);
               //console.log(match);
               // console.log(req.body.password);
               // console.log(data[0].password);
@@ -107,7 +110,7 @@ app.post('/login', async (req, res) => {
               // console.log([...data[0].password].map(c => c.charCodeAt(0)));
 
               
-              if(req.body.password.trim() === data[0].password.trim()){
+              if(match){
                   req.session.user = username;
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
