@@ -1,3 +1,25 @@
+.form-group {
+    color: #A9A9A9;
+}
+
+.form-control {
+    background-color: #4F4F4F;
+    color: #A9A9A9;
+}
+
+.btn-primary {
+    background-color: #4F4F4F;
+    color: #A9A9A9;
+}
+
+p {
+    color: #A9A9A9;
+}
+
+a {
+    color: #A9A9A9;
+}
+
 /* Custom CSS to make the container full width */
 .container {
     width: 100%;
