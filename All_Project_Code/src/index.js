@@ -2,14 +2,16 @@
 // <!-- Section 1 : Import Dependencies -->
 // *****************************************************
 
-const express = require('express');
+
+const express = require('express'); // To build an application server or API
+const path = require('path');
 const app = express();
-const pgp = require('pg-promise')();
+const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const bcrypt = require('bcrypt');
-const axios = require('axios');
-const path = require('path'); // Import path module
+const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
+const bcrypt = require('bcrypt'); //  To hash passwords
+const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -40,12 +42,17 @@ db.connect()
 // <!-- Section 3 : App Settings -->
 // *****************************************************
 
-app.set('view engine', 'ejs');
-app.use(bodyParser.json());
+
+app.set('view engine', 'ejs'); // set the view engine to EJS
+app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 app.use(bodyParser.urlencoded({ extended: true }));
+// initialize session variables
+app.use(express.static(path.join(__dirname, 'init_data')));
+
 
 // Serve static files from the 'resource' directory
 app.use(express.static(path.join(__dirname, 'resource')));
+
 
 app.use(
   session({
@@ -55,14 +62,26 @@ app.use(
   })
 );
 
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
-// TODO - Include your API routes here
-
 app.get("/", (req, res) => {
   res.render("pages/login");
+});
+
+app.get('/detail-product', (req, res) => {
+  res.render('pages/detail_product');
+
 });
 
 // GET /login route
@@ -70,49 +89,64 @@ app.get('/login', (req, res) => {
   res.render('pages/login', { pageType: 'login', registered: req.query.registered });
 });
 
-// POST /login route
 app.post('/login', async (req, res) => {
-  try {
-    // Find user by username
-    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
+  const query = 'SELECT * FROM users WHERE username = $1';
+  const username = req.body.username;
+  const values = [username];
 
-    if (user) {
-      // Compare password
-      const match = await bcrypt.compare(req.body.password, user.password);
+  db.any(query, values)
+      .then(async function (data) {
+          if(data.length > 0){
+              //const match = await bcrypt.compare(req.body.password, data[0].password);
+              //console.log(match);
+              // console.log(req.body.password);
+              // console.log(data[0].password);
+              // console.log(req.body.password.trim() === data[0].password.trim());
+              // console.log(typeof req.body.password, typeof data[0].password);
+              // console.log([...req.body.password].map(c => c.charCodeAt(0)));
+              // console.log([...data[0].password].map(c => c.charCodeAt(0)));
+
+              
+              if(req.body.password.trim() === data[0].password.trim()){
+                  req.session.user = username;
+                  //res.json({status: 'success', message: 'success'});
+                  req.session.save();
+                  res.redirect('/discover');
+              }
+              else{
+                  console.log('Login failed, please try again');
+                  //res.json({status: 'Invalid input', message: 'Invalid input'});
+                  res.redirect('/login');
+              }
+          }
+         else {
+              console.log('no user data', err);
+              res.redirect('/register');
+          }
       
-      if (match) {
-        // Passwords match
-        req.session.user = user; // Save user in session
-        res.redirect('/home'); // Redirect to /home route
-      } else {
-        // Passwords don't match
-        res.status(401).render('pages/login', { message: 'Incorrect username or password.' });
-      }
-    } else {
-      // User not found, redirect to GET /register
-      res.redirect('/register');
-    }
-  } catch (error) {
-    // Handle database errors or bcrypt errors
-    console.error('Login error', error);
-    res.status(500).render('pages/login', { message: 'An error occurred during login. Please try again.' });
-  }
+      })
+      .catch((err) => {
+          console.log('login failed', err);
+          res.redirect('/login');
+      })
 });
 
-// GET /register route
 app.get('/register', (req, res) => {
-  res.render('pages/register', { pageType: 'register' });
+  res.render('pages/register');
 });
 
-// POST /register route
 app.post('/register', async (req, res) => {
   try {
     // Check if the username already exists
     const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
-
+    console.log(req.body.username);
+    
+    console.log(existingUser);
     if (existingUser) {
       // Username already exists, render the register page with an error message
+      //res.json({status: 'Invalid input', message: 'Invalid input'});
       res.render('pages/register', { message: 'Username already exists. Please choose a different one.' });
+
     } else {
       // Username is unique, proceed with hashing the password
       const hash = await bcrypt.hash(req.body.password, 10);
@@ -122,6 +156,7 @@ app.post('/register', async (req, res) => {
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
+      //res.json({status: 'Success', message: 'Success'});
       res.redirect('/login?registered=true');
     }
   } catch (error) {
@@ -129,6 +164,16 @@ app.post('/register', async (req, res) => {
     res.render('pages/register', { message: 'An error occurred during registration. Please try again.' });
   }
 });
+
+
+app.get('/user', (req, res) => {
+  res.render('pages/user');
+});
+
+app.get('/welcome', (req, res) => {
+    res.json({status: 'success', message: 'Welcome!'});
+  });
+
 
 // GET /home route
 app.get('/home', (req, res) => {
@@ -141,27 +186,6 @@ app.get('/home', (req, res) => {
 });
 
 // Discover
-app.get('/discover', async (req, res) => {
-try {
-  const response = await axios({
-    url: `https://app.ticketmaster.com/discovery/v2/events.json`,
-    method: 'GET',
-    dataType: 'json',
-    params: {
-      apikey: process.env.API_KEY,
-      keyword: 'Shane Smith and the Saints',
-      size: 10
-    },
-  });
-  
-  const events = response.data._embedded.events.map(event => {
-    return {
-      name: event.name,
-      image: (event.images && event.images[0].url) || '/views/pages/default.jpg',
-      dateAndTime: event.dates.start.localDate + ' ' + event.dates.start.localTime,
-      bookingUrl: event.url
-    };
-  });
   
   res.render('pages/discover', { results: events });
 } catch (error) {
@@ -169,6 +193,37 @@ try {
   res.render('pages/discover', { results: [] });
 }
 });
+
+
+// app.get('/discover', async (req, res) =>{
+//   axios({
+//       url: `https://www.steamwebapi.com/steam/api/items`,
+//       method: 'GET',
+//       dataType: 'json',
+//       headers: {
+//         'Accept-Encoding': 'application/json',
+//       },
+//       params: {
+//         key: process.env.API_KEY,
+//         game: '1',
+//         sort_by: 'priceAz',
+//         item_type: 'null',
+//       },
+//     })
+//   .then(results => {
+//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      
+//       res.render('views/pages/discover', {results: results.data});
+//   })
+//   .catch(error => {
+//       // Handle errors
+//       console.error(error);
+
+//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
+//   });
+
+//   //res.render('pages/discover');
+// })
 
 // GET /user route
 app.get('/user', async (req, res) => {
@@ -207,11 +262,11 @@ req.session.destroy(err => {
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 
-app.listen(3000, () => {
-  console.log('Server is listening on port 3000');
-});
+// Start the server
+module.exports = app.listen(3000);
+//module.exports = app.listen(3000);
+console.log('Server is listening on port 3000');
 
-// Authentication Middleware
 const auth = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect('/login');
