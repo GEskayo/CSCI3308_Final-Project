@@ -75,35 +75,35 @@ app.get('/discover', (req, res) => {
   res.render('pages/discover');
 });
 
-app.get('/discover', async (req, res) =>{
-  axios({
-      url: `https://www.steamwebapi.com/steam/api/items`,
-      method: 'GET',
-      dataType: 'json',
-      headers: {
-        'Accept-Encoding': 'application/json',
-      },
-      params: {
-        key: process.env.API_KEY,
-        game: '1',
-        sort_by: 'priceAz',
-        item_type: 'null',
-      },
-    })
-  .then(results => {
-      console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-  
-      res.render('views/pages/discover', {results: results.data});
-  })
-  .catch(error => {
-      // Handle errors
-      console.error(error);
+// app.get('/discover', async (req, res) =>{
+//   axios({
+//       url: `https://www.steamwebapi.com/steam/api/items`,
+//       method: 'GET',
+//       dataType: 'json',
+//       headers: {
+//         'Accept-Encoding': 'application/json',
+//       },
+//       params: {
+//         key: process.env.API_KEY,
+//         game: '1',
+//         sort_by: 'priceAz',
+//         item_type: 'null',
+//       },
+//     })
+//   .then(results => {
+//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      
+//       res.render('views/pages/discover', {results: results.data});
+//   })
+//   .catch(error => {
+//       // Handle errors
+//       console.error(error);
 
-      res.render('views/pages/discover', {results: [], error: 'API call failed'});
-  });
+//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
+//   });
 
-  //res.render('pages/discover');
-})
+//   //res.render('pages/discover');
+// })
 
 app.get('/detail-product', (req, res) => {
   res.render('pages/detail_product');
@@ -133,14 +133,14 @@ app.post('/login', async (req, res) => {
               
               if(req.body.password.trim() === data[0].password.trim()){
                   req.session.user = username;
-                  res.json({status: 'success', message: 'success'});
+                  //res.json({status: 'success', message: 'success'});
                   req.session.save();
-                  //res.redirect('/discover');
+                  res.redirect('/discover');
               }
               else{
                   console.log('Login failed, please try again');
-                  res.json({status: 'Invalid input', message: 'Invalid input'});
-                  //res.redirect('/login');
+                  //res.json({status: 'Invalid input', message: 'Invalid input'});
+                  res.redirect('/login');
               }
           }
          else {
@@ -168,8 +168,8 @@ app.post('/register', async (req, res) => {
     console.log(existingUser);
     if (existingUser) {
       // Username already exists, render the register page with an error message
-      res.json({status: 'Invalid input', message: 'Invalid input'});
-      //res.render('pages/register', { message: 'Username already exists. Please choose a different one.' });
+      //res.json({status: 'Invalid input', message: 'Invalid input'});
+      res.render('pages/register', { message: 'Username already exists. Please choose a different one.' });
 
     } else {
       // Username is unique, proceed with hashing the password
@@ -180,8 +180,8 @@ app.post('/register', async (req, res) => {
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
-      res.json({status: 'Success', message: 'Success'});
-      //res.redirect('/login?registered=true');
+      //res.json({status: 'Success', message: 'Success'});
+      res.redirect('/login?registered=true');
     }
   } catch (error) {
     console.error('Registration error:', error);
