@@ -170,6 +170,27 @@ try {
 }
 });
 
+// GET /user route
+app.get('/user', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session.user) {
+        return res.status(401).send('User not authenticated');
+    }
+
+    try {
+        // Retrieve user data from the database
+        const userId = req.session.user.id; // Assuming the user's ID is stored in the session
+        const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
+
+        // Send the user data as a response
+        res.json(userData);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 // Logout
 app.get('/logout', (req, res) => {
 req.session.destroy(err => {
