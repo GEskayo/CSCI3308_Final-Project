@@ -186,13 +186,15 @@ app.get('/home', (req, res) => {
 });
 
 // Discover
-  
-  res.render('pages/discover', { results: events });
-} catch (error) {
-  console.error('Error fetching events:', error);
-  res.render('pages/discover', { results: [] });
-}
+app.get('/discover', (req, res) => {
+  res.render('pages/discover');
 });
+  
+// } catch (error) {
+//   console.error('Error fetching events:', error);
+//   res.render('pages/discover', { results: [] });
+// }
+
 
 
 // app.get('/discover', async (req, res) =>{
