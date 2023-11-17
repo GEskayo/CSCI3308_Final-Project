@@ -54,6 +54,7 @@ app.use(express.static(path.join(__dirname, 'init_data')));
 app.use(express.static(path.join(__dirname, 'resource')));
 
 
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
