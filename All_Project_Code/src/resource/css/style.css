@@ -1,0 +1,31 @@
+body, html {
+    background-color: #2F2F2F;
+    color: #A9A9A9;
+}
+
+.container {
+    background-color: #2F2F2F;
+    color: #A9A9A9;
+}
+
+.form-group {
+    color: #A9A9A9;
+}
+
+.form-control {
+    background-color: #4F4F4F;
+    color: #A9A9A9;
+}
+
+.btn-primary {
+    background-color: #4F4F4F;
+    color: #A9A9A9;
+}
+
+p {
+    color: #A9A9A9;
+}
+
+a {
+    color: #A9A9A9;
+}
