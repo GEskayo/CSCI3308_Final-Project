@@ -1,0 +1,10 @@
+Week 2 meeting log:
+    1. Finish the API axios and get it connected (fix the referencing error)
+    2. For user stories make sure that any story/issue in the TODO box are properly assigned to a group memeber.
+    3. Adding extra features to the following APIs:
+        a. Login page
+        b. register page
+        c. user page
+        d. and other potential features that give the user more options
+    4. Start working on the css part of the project as well as including an image for the project
+    5. Assign specific people for certain task to reduce the merge conflicts when pushing to the main branch
