@@ -1,0 +1,96 @@
+1. UAT Plan for Filter API for Skins
+    Objective: Ensure that the Filter API effectively sorts and displays skins based on user-selected criteria.
+
+    Test Cases:
+
+    Filter by Rarity: Select a specific rarity and verify that only skins of that rarity are displayed.
+    Filter by Weapon Type: Choose a weapon type and check if the displayed skins match the selection.
+    Filter by Case Type: Select a case type and ensure that skins associated with that case are shown.
+    Multiple Filters: Apply multiple filters simultaneously and verify the accuracy of the results.
+    
+    Acceptance Criteria:
+
+    The filter should accurately display skins based on the selected criteria.
+    Multiple filters can be applied simultaneously without errors.
+    The system should handle no results appropriately, displaying a relevant message.
+    
+    Test Data:
+
+    Predefined lists of skins with varying rarities, weapon types, and case types.
+    
+    Test Environment:
+
+    The test will be conducted on the web application interface, ensuring API connectivity.
+    Expected Results:
+
+    Skins are correctly filtered and displayed according to the selected criteria.
+    No crashes or errors occur during filtering.
+    User Acceptance Testers:
+
+    Gamers and users familiar with skin types and categories.
+
+
+2. UAT Plan for Discover Page
+    Objective: Ensure that the Discover page provides a user-friendly interface for searching and exploring skins.
+
+    Test Cases:
+
+    Search Functionality: Use the search bar to find specific skins and verify the accuracy of results.
+    Random Skin Display: Check if the cards display random skins upon each visit or refresh.
+    Hyperlink Functionality: Verify that clicking on a weapon type takes the user to the relevant page or filter.
+    Acceptance Criteria:
+
+    The search bar accurately finds and displays skins based on user queries.
+    Random skins are displayed on each visit to the Discover page.
+    Hyperlinks lead to correct pages or filters.
+    
+    Test Data:
+
+    A variety of skin names and types for search functionality testing.
+    
+    Test Environment:
+
+    Testing will be performed on the live version of the website.  
+    
+    Expected Results:
+
+    Search results are relevant and accurate.
+    Random skins are displayed appropriately.
+    Hyperlinks function correctly without errors.
+    
+    User Acceptance Testers:
+
+    New and existing users of the platform.
+
+
+3. UAT Plan for User Page
+    Objective: Ensure that the User page accurately displays and manages a user's favorite or pinned skins.
+
+    Test Cases:
+
+    Adding Skins to Favorites: Test adding skins to the favorites list and verify they appear on the User page.
+    Removing Skins from Favorites: Remove skins from favorites and check if they are appropriately removed from the User page.
+    Display of Pinned Skins: Ensure that pinned skins are prominently displayed on the User page.
+    
+    Acceptance Criteria:
+
+    Users can easily add or remove skins from their favorites.
+    Changes in the favorites list are immediately reflected on the User page.
+    Pinned skins are displayed as expected.
+    
+    Test Data:
+
+    A selection of skins to add or remove from favorites.
+    
+    Test Environment:
+
+    The test will be conducted within the user's account on the platform.
+    
+    Expected Results:
+
+    Favorites and pinned skins are accurately reflected on the User page.
+    The interface is intuitive and responsive to changes.
+    
+    User Acceptance Testers:
+
+    Regular users who frequently use the feature to manage their favorite skins.
