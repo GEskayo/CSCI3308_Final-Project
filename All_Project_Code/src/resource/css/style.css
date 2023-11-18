@@ -1,28 +1,38 @@
-.form-group {
-    color: #A9A9A9;
-}
-
+/* Custom styles for input fields */
 .form-control {
-    background-color: #4F4F4F;
-    color: #A9A9A9;
+    border: 3px solid #A9A9A9; /* Larger border */
+    background-color: transparent; /* Transparent background */
+    color: #A9A9A9; /* Light grey text color */
 }
 
+/* Remove focus highlight */
+.form-control:focus {
+    background-color: transparent;
+    border-color: #A9A9A9;
+    box-shadow: none;
+}
+
+/* Custom styles for buttons */
 .btn-primary {
-    background-color: #4F4F4F;
-    color: #A9A9A9;
+    background-color: transparent; /* Dark grey background */
+    color: white; /* White text */
+    border: 2px solid #007BFF; /* Larger border */
 }
 
-p {
-    color: #A9A9A9;
+/* Hover and active states for buttons */
+.btn-primary:hover, .btn-primary:active {
+    background-color: #007BFF; /* Medium blue */
+    color: white;
 }
 
-a {
-    color: #A9A9A9;
+/* Custom styles for paragraphs and links */
+p, a {
+    color: #A9A9A9; /* Light grey text color */
 }
 
-/* Custom CSS to make the container full width */
+/* Custom styles for the container */
 .container {
-    width: 100%;
+    width: 95%;
     max-width: 100%;
     padding-right: 0;
     padding-left: 0;
@@ -32,5 +42,10 @@ a {
 
 /* Set the background color of the body */
 body {
-    background-color: rgb(79, 79, 104);
+    background-color: rgb(79, 79, 104); /* Dark grey background */
+}
+
+/* Additional styles for alert messages */
+.alert {
+    border: 2px solid #f40909; /* Larger border for alerts */
 }

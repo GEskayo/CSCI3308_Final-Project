@@ -1,8 +1,5 @@
 <!-- Include the 'head' partial for common head elements like CSS links, meta tags, etc. -->
 <%- include ('../partials/head') %>
-
-<link rel="stylesheet" type="text/css" href="../styles.css">
-
 <!-- Include the 'menu' partial with 'pageType' set to 'register' for the navigation menu -->
 <%- include ('../partials/menu', { pageType: 'register' }) %>
 
@@ -11,10 +8,15 @@
     <div class="row justify-content-center">
       <div class="col-md-5">
         <!-- Registration card container -->
-        <div class="card border-0">
-          <div class="card-body">
+
             <!-- Registration form heading -->
             <h1 class="text-center mb-4">Register</h1>
+            <!-- Error message placeholder (hidden by default) -->
+            <% if (typeof message !== 'undefined' && message) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= message %>
+              </div>
+            <% } %>
             <!-- Registration form, POST method sends data to server -->
             <form action="/register" method="POST">
               <!-- Username input field -->
@@ -35,8 +37,7 @@
             <!-- Link to login page for users who already have an account -->
             <div class="text-center mt-3">
               <p>Already have an account? <a href="/login">Login</a></p>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>

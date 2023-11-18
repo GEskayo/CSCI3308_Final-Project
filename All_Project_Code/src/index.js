@@ -85,10 +85,12 @@ app.get('/detail-product', (req, res) => {
 
 });
 
-// GET /login route
 app.get('/login', (req, res) => {
-  res.render('pages/login');
+  const registered = req.query.registered;
+  const message = registered ? 'Registration successful. Have fun SkineeDipping!' : null;
+  res.render('pages/login', { registeredMessage: message });
 });
+
 
 app.post('/login', async (req, res) => {
   const query = 'SELECT * FROM users WHERE username = $1';
@@ -160,7 +162,7 @@ app.post('/register', async (req, res) => {
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
-      //res.json({status: 'Success', message: 'Success'});
+      // After successful registration
       res.redirect('/login?registered=true');
     }
   } catch (error) {
