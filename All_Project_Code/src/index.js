@@ -54,6 +54,11 @@ app.use(express.static(path.join(__dirname, 'init_data')));
 app.use(express.static(path.join(__dirname, 'resource')));
 
 
+const users = {
+  username: undefined,
+  id: undefined,
+}
+
 
 app.use(
   session({
@@ -112,7 +117,9 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
-                  req.session.user = username;
+                  users.username = username;
+
+                  req.session.users = users;
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
                   res.redirect('/discover');
@@ -171,7 +178,9 @@ app.post('/register', async (req, res) => {
 
 
 app.get('/user', (req, res) => {
-  res.render('pages/user');
+  res.render('pages/user', {
+    username: req.session.users.username,
+  });
 });
 
 app.get('/welcome', (req, res) => {
