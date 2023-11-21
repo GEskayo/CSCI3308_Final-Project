@@ -191,8 +191,8 @@ app.get('/welcome', (req, res) => {
 // GET /home route
 app.get('/home', (req, res) => {
   // Check if user is logged in
-  if (req.session.user) {
-    res.render('pages/home', { user: req.session.user }); // Render the home page
+  if (req.session.users) {
+    res.render('pages/home', { user: req.session.users }); // Render the home page
   } else {
     res.redirect('/login'); // Redirect to login if not logged in
   }
@@ -241,24 +241,24 @@ app.get('/discover', (req, res) => {
 // })
 
 // GET /user route
-app.get('/user', async (req, res) => {
-    // Check if user is authenticated
-    if (!req.session.user) {
-        return res.status(401).send('User not authenticated');
-    }
+// app.get('/user', async (req, res) => {
+//     // Check if user is authenticated
+//     if (!req.session.user) {
+//         return res.status(401).send('User not authenticated');
+//     }
 
-    try {
-        // Retrieve user data from the database
-        const userId = req.session.user.id; // Assuming the user's ID is stored in the session
-        const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
+//     try {
+//         // Retrieve user data from the database
+//         const userId = req.session.user.id; // Assuming the user's ID is stored in the session
+//         const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
 
-        // Send the user data as a response
-        res.json(userData);
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+//         // Send the user data as a response
+//         res.json(userData);
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
 
 
 // Logout
@@ -283,7 +283,7 @@ module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
 
 const auth = (req, res, next) => {
-  if (!req.session.user) {
+  if (!req.session.users) {
     return res.redirect('/login');
   }
   next();
