@@ -26,8 +26,39 @@
 
     <!-- Main content area -->
     <div class="col-md-8">
+        <div class="row row-cols-auto">
+            <% if (results && results.length > 0) { %>
+                <% results.forEach(item => { %>
+                    <div class="item">
+                        <div class="card" style="width: 18rem;">
+                            <img src="<%= item.itemimage %>" class="card-img-top" alt="Image of skin">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= item.marketname %></h5>
+                              <p class="card-text">Average Price in USD: $<%= item.priceavg %></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item"><%= item.itemtype %></li>
+                              <li class="list-group-item"><%= item.itemname %></li>
+                              <li class="list-group-item"><%= item.rarity %></li>
+                            </ul>
+                            <div class="card-body">
+                              <a href="#" class="card-link">Card link</a>
+                              <a href="#" class="card-link">Another link</a>
+                            </div>
+                          </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No items found or there was an error.</p>
+                <% if (error) { %>
+                    <p>Error: <%= error %></p>
+                <% } %>
+            <% } %>
+            </div>
+        </div>
+
       <!-- Content to be inserted here -->
-    </div>
+
 
     <!-- Right sidebar for filters -->
     <div class="col-md-2">

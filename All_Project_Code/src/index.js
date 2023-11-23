@@ -190,10 +190,10 @@ app.get('/home', (req, res) => {
 });
 
 // Discover
-app.get('/discover', (req, res) => {
-  res.render('pages/discover');
-});
-  
+// app.get('/discover', (req, res) => {
+//   res.render('pages/discover');
+// });
+  //
 // } catch (error) {
 //   console.error('Error fetching events:', error);
 //   res.render('pages/discover', { results: [] });
@@ -201,35 +201,52 @@ app.get('/discover', (req, res) => {
 
 
 
-// app.get('/discover', async (req, res) =>{
-//   axios({
-//       url: `https://www.steamwebapi.com/steam/api/items`,
-//       method: 'GET',
-//       dataType: 'json',
-//       headers: {
-//         'Accept-Encoding': 'application/json',
-//       },
-//       params: {
-//         key: process.env.API_KEY,
-//         game: '1',
-//         sort_by: 'priceAz',
-//         item_type: 'null',
-//       },
-//     })
-//   .then(results => {
-//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-      
-//       res.render('views/pages/discover', {results: results.data});
-//   })
-//   .catch(error => {
-//       // Handle errors
-//       console.error(error);
+app.get('/discover', async (req, res) =>{
+  //console.log(results);
+  let error = null;
+  console.log('juan is cute');
+  axios({
+      url: `https://www.steamwebapi.com/steam/api/items`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: {
+        key: process.env.API_KEY,
+        game: 'csgo',
+        page: '1',
+        max: '12',
+        // sort_by: 'name',
+        // search: '5',
+        // price_min: '0',
+        // price_max: '10000',
+        // price_real_min: '0',
+        //price_real_max: '10000',
+        //item_group: 'knife',
+        //item_type: 'null',
+        //item_name: 'null',
+        //wear: 'ft,fn,bt',
+        //currency: 'USD',
+      },
+    })
+  .then(results => {
+      console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      console.log(results);
+      res.render('pages/discover', {results: results.data, error});
+  })
+  .catch(error => {
+      // Handle errors
+      console.error('error message: ', error.message);
+      if(error.message){
+        console.error('error results: ', error.results);
+      };
 
-//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
-//   });
+      res.render('pages/discover', {results: [], error: 'API call failed'});
+  });
 
-//   //res.render('pages/discover');
-// })
+  //res.render('pages/discover');
+})
 
 // GET /user route
 app.get('/user', async (req, res) => {
