@@ -37,9 +37,9 @@
                               <p class="card-text">Average Price in USD: $<%= item.priceavg %></p>
                             </div>
                             <ul class="list-group list-group-flush">
-                              <li class="list-group-item"><%= item.itemtype %></li>
-                              <li class="list-group-item"><%= item.itemname %></li>
-                              <li class="list-group-item"><%= item.rarity %></li>
+                              <li class="list-group-item">Type of Weapon: <%= item.itemtype %></li>
+                              <li class="list-group-item">Item Name: <%= item.itemname %></li>
+                              <li class="list-group-item">Rarity: <%= item.rarity %></li>
                             </ul>
                             <div class="card-body">
                               <a href="#" class="card-link">Card link</a>
@@ -67,13 +67,19 @@
       <div class="mb-3">
         <label for="conditionFilter" class="form-label">Condition</label>
         <select class="form-select" id="conditionFilter">
-          <option>Factory New</option>
-          <option>Minimal Wear</option>
-          <option>Field Tested</option>
-          <option>Well Worn</option>
-          <option>Battle Scarred</option>
+          <option value="fn">Factory New</option>
+          <option value="mw">Minimal Wear</option>
+          <option value="ft">Field Tested</option>
+          <option value="ww">Well Worn</option>
+          <option value="bs">Battle Scarred</option>
         </select>
       </div>
+      <script>
+        document.getElementById('conditionFilter').addEventListener('change', function() {
+          var selectedCondition = this.value;
+          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}`;
+        });
+      </script>
       <!-- Filter for sorting by price -->
       <div class="mb-3">
         <label for="priceSort" class="form-label">Sort by Price</label>

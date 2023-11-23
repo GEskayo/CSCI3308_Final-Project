@@ -204,7 +204,12 @@ app.get('/home', (req, res) => {
 app.get('/discover', async (req, res) =>{
   //console.log(results);
   let error = null;
-  console.log('juan is cute');
+  let queryParams = {
+    key: process.env.API_KEY,
+    page: '1',
+    game: 'csgo',
+    wear: req.query.wear || 'fn', // use the query parameter
+  };
   axios({
       url: `https://www.steamwebapi.com/steam/api/items`,
       method: 'GET',
@@ -212,23 +217,7 @@ app.get('/discover', async (req, res) =>{
       headers: {
         'Accept-Encoding': 'application/json',
       },
-      params: {
-        key: process.env.API_KEY,
-        game: 'csgo',
-        page: '1',
-        max: '12',
-        // sort_by: 'name',
-        // search: '5',
-        // price_min: '0',
-        // price_max: '10000',
-        // price_real_min: '0',
-        //price_real_max: '10000',
-        //item_group: 'knife',
-        //item_type: 'null',
-        //item_name: 'null',
-        //wear: 'ft,fn,bt',
-        //currency: 'USD',
-      },
+      params: queryParams
     })
   .then(results => {
       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
