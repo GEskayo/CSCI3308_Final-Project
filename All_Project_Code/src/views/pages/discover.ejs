@@ -12,17 +12,30 @@
     </div>
   </div>
 
-  <div class="row no-gutters">
-    <!-- Left sidebar for displaying categories -->
+  <div class="row">
+    <!-- Category Filter -->
     <div class="col-md-2">
-      <h5>Categories</h5>
-      <ul class="list-unstyled">
-        <li><a href="#">Assault Rifle</a></li>
-        <li><a href="#">Submachine Gun</a></li>
-        <li><a href="#">Knives</a></li>
-        <li><a href="#">Secondaries</a></li>
-      </ul>
+        <label for="categoryFilterForm" class="form-label">Category</label>
+            <select class="form-select" id="categoryFilterForm">
+                <option value="rifle" <% if (selectedCategories === 'rifle') { %>selected<% } %>> Assault Rifle</option>
+                <option value="sniper rifle" <% if (selectedCategories === 'sniper rifle') { %>selected<% } %>> Sniper Rifles</option>
+                <option value="knife" <% if (selectedCategories === 'knife') { %>selected<% } %>> Knives</option>
+                <option value="pistol" <% if (selectedCategories === 'pistol') { %>selected<% } %>> Pistols</option>
+                <option value="smg" <% if (selectedCategories === 'smg') { %>selected<% } %>> Submachine Guns</option>
+                <option value="shotgun" <% if (selectedCategories === 'shotgun') { %>selected<% } %>> Shotguns</option>
+                <option value="machinegun" <% if (selectedCategories === 'machinegun') { %>selected<% } %>> Light Machine Guns (LMG)</option>
+                <option value="graffiti" <% if (selectedCategories === 'graffiti') { %>selected<% } %>> Graffiti</option>
+            </select>
     </div>
+    <script>
+        document.getElementById('categoryFilterForm').addEventListener('change', function() {
+            var selectedCategories = this.value;
+            var selectedSortOrder = document.getElementById('priceSort').value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            // Redirect to the updated URL
+            window.location.href = `/discover?itemgroups=${encodeURIComponent(selectedCategoriesjoin)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
+        });
+    </script>
 
     <!-- Main content area -->
     <div class="col-md-8">
@@ -78,7 +91,8 @@
         document.getElementById('conditionFilter').addEventListener('change', function() {
           var selectedCondition = this.value;
           var selectedSortOrder = document.getElementById('priceSort').value;
-          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
+          var selectedCategories = document.getElementById('categoryFilterForm').value;
+          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&itemgroup=${encodeURIComponent(selectedCategories)}`;
           
         });
       </script>
@@ -94,7 +108,8 @@
         document.getElementById('priceSort').addEventListener('change', function() {
             var selectedSortOrder = this.value;
             var selectedCondition = document.getElementById('conditionFilter').value;
-            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}`;
+            var selectedCategories = document.getElementById('categoryFilterForm').value;
+            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}&itemgroup=${encodeURIComponent(selectedCategories)}`;
         });
         </script>
     </div>

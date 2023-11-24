@@ -208,7 +208,9 @@ app.get('/discover', async (req, res) =>{
     key: process.env.API_KEY,
     page: '1',
     game: 'csgo',
+    max: 100,
     wear: req.query.wear || '', // use the query parameter
+    itemgroup: req.query.itemgroup || '',
   };
   axios({
       url: `https://www.steamwebapi.com/steam/api/items`,
@@ -220,8 +222,12 @@ app.get('/discover', async (req, res) =>{
       params: queryParams
     })
   .then(results => {
-      //console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-      //console.log(results);
+      console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      console.log(results);
+      // if (req.query.itemgroups) {
+      //   // Add itemgroups to queryParams
+      //   queryParams.itemgroup; // Assuming the API expects an array
+      // }
       //let results = response.data;
       if (Array.isArray(results.data)) {
         // Apply sorting based on the 'sort' query parameter
@@ -231,7 +237,7 @@ app.get('/discover', async (req, res) =>{
             results.data.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
         }
       }
-      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort});
+      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.sort});
   })
   .catch(error => {
       // Handle errors
