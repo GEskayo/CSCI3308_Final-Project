@@ -67,27 +67,36 @@
       <div class="mb-3">
         <label for="conditionFilter" class="form-label">Condition</label>
         <select class="form-select" id="conditionFilter">
-          <option value="fn">Factory New</option>
-          <option value="mw">Minimal Wear</option>
-          <option value="ft">Field Tested</option>
-          <option value="ww">Well Worn</option>
-          <option value="bs">Battle Scarred</option>
+            <option value="fn" <% if (selectedWear === 'fn') { %>selected<% } %>>Factory New</option>
+            <option value="mw" <% if (selectedWear === 'mw') { %>selected<% } %>>Minimal Wear</option>
+            <option value="ft" <% if (selectedWear === 'ft') { %>selected<% } %>>Field Tested</option>
+            <option value="ww" <% if (selectedWear === 'ww') { %>selected<% } %>>Well Worn</option>
+            <option value="bs" <% if (selectedWear === 'bs') { %>selected<% } %>>Battle Scarred</option>
         </select>
       </div>
       <script>
         document.getElementById('conditionFilter').addEventListener('change', function() {
           var selectedCondition = this.value;
-          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}`;
+          var selectedSortOrder = document.getElementById('priceSort').value;
+          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
+          
         });
       </script>
       <!-- Filter for sorting by price -->
       <div class="mb-3">
         <label for="priceSort" class="form-label">Sort by Price</label>
         <select class="form-select" id="priceSort">
-          <option>High to Low</option>
-          <option>Low to High</option>
-        </select>
+            <option value="High to Low" <% if (selectedSort === 'High to Low') { %>selected<% } %>>High to Low</option>
+            <option value="Low to High" <% if (selectedSort === 'Low to High') { %>selected<% } %>>Low to High</option>
+        </select>    
       </div>
+      <script>
+        document.getElementById('priceSort').addEventListener('change', function() {
+            var selectedSortOrder = this.value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}`;
+        });
+        </script>
     </div>
   </div>
 </div>
