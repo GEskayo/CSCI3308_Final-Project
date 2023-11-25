@@ -3,7 +3,6 @@
 }
 
 .form-control {
-    background-color: #4F4F4F;
     color: #A9A9A9;
 }
 
@@ -32,5 +31,25 @@ a {
 
 /* Set the background color of the body */
 body {
-    background-color: rgb(79, 79, 104);
+    background-color: #161616;
+}
+
+/* Class tags for specific styles */
+
+.light-text {
+    color: #A9A9A9;
+}
+
+
+
+.padding-left {
+    padding-left: 20px;
+}
+
+.red-text {
+    color: #ae0000;
+}
+
+.light-grey-background {
+    background-color: rgb(46, 46, 46);
 }
