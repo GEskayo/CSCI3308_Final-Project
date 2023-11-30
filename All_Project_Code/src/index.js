@@ -77,7 +77,7 @@ app.use(
 // *****************************************************
 
 app.get("/", (req, res) => {
-  res.render("pages/login");
+  res.render("pages/login", { message: '' });
 });
 
 app.get('/detail-product', (req, res) => {
@@ -87,7 +87,7 @@ app.get('/detail-product', (req, res) => {
 
 app.get('/login', (req, res) => {
   const registered = req.query.registered;
-  const message = registered ? 'Registration successful. Have fun SkineeDipping!' : null;
+  const message = registered ? 'Registration successful. Have fun SkineeDipping!' : '';
   res.render('pages/login', { registeredMessage: message });
 });
 
@@ -114,10 +114,10 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
-                  req.session.user = username;
+                req.session.user = { id: data[0].id, username: data[0].username };
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
-                  res.redirect('/discover');
+                  res.redirect('/home');
               }
               else{
                   console.log('Login failed, please try again');
@@ -172,8 +172,34 @@ app.post('/register', async (req, res) => {
 });
 
 
-app.get('/user', (req, res) => {
-  res.render('pages/user');
+app.get('/user', async (req, res) => {
+  if (!req.session.user) {
+      return res.status(401).send('User not authenticated');
+  }
+
+  try {
+      const userId = req.session.user.id;
+      const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
+      res.render('user', { username: userData.username }); // Assuming 'user' is your EJS template
+  } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/user-profile', async (req, res) => {
+  if (req.session.user && req.session.user.id) {
+      try {
+          const user = await db.one('SELECT username FROM users WHERE id = $1', req.session.user.id);
+          res.render('user-profile', { username: user.username });
+      } catch (error) {
+          console.error('Database error:', error);
+          res.redirect('/login');
+      }
+  } else {
+      res.redirect('/login');
+  }
 });
 
 app.get('/welcome', (req, res) => {
@@ -232,27 +258,6 @@ app.get('/discover', (req, res) => {
 
 //   //res.render('pages/discover');
 // })
-
-// GET /user route
-app.get('/user', async (req, res) => {
-    // Check if user is authenticated
-    if (!req.session.user) {
-        return res.status(401).send('User not authenticated');
-    }
-
-    try {
-        // Retrieve user data from the database
-        const userId = req.session.user.id; // Assuming the user's ID is stored in the session
-        const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
-
-        // Send the user data as a response
-        res.json(userData);
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
 
 // Logout
 app.get('/logout', (req, res) => {
