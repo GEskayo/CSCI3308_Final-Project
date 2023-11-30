@@ -57,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'resource')));
 const users = {
   username: undefined,
   id: undefined,
+  userImage: undefined,
 }
 
 
@@ -117,7 +118,8 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
-                  users.username = username;
+                    users.username = data.username;
+                    users.userImage = data.userImage;
 
                   req.session.users = users;
                   //res.json({status: 'success', message: 'success'});
@@ -162,8 +164,10 @@ app.post('/register', async (req, res) => {
       // Username is unique, proceed with hashing the password
       const hash = await bcrypt.hash(req.body.password, 10);
 
+      // Default userimage
+      const image = "../resource/images/favicon.png";
       // Insert username and hashed password into 'users' table
-      await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+      await db.none('INSERT INTO users(username, password, userImage) VALUES($1, $2, $3)', [req.body.username, hash, image]);
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
@@ -180,6 +184,7 @@ app.post('/register', async (req, res) => {
 app.get('/user', (req, res) => {
   res.render('pages/user', {
     username: req.session.users.username,
+    Image: req.session.users.userImage,
   });
 });
 
@@ -271,6 +276,17 @@ req.session.destroy(err => {
     res.clearCookie('sid');
     res.render('pages/login', { message: 'Logged out Successfully' });
 });
+});
+
+
+//uploadPic POST
+app.put('/uploadPic', async(req, res) => {
+  const photo = document.getElementById("userPhoto")
+  console.log("does it even know the user name?? ", req.session.users.username);
+
+  // query = `SELECT * FROM users WHERE username = $1`;
+  // username = req.session
+  await db.none(`INSERT INTO users(userImage) VALUES($1) WHERE username = $2`,[photo, req.session.users.username])
 });
 
 // *****************************************************

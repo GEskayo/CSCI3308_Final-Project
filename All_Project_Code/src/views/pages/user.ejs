@@ -3,9 +3,19 @@
 
 <div class="user-profile">
     <div class="profile-header">
-        <img id="profile-picture" src="/path/to/default/image.jpg" alt="Profile Picture">
+        <div class="navbar">
+            <img id="profile-picture" src="<%=Image%>" alt="Profile Picture">
+            <form action="/uploadPic" method="PUT" enctype="multipart/form-data" >
+                <label for="file">Update User Pic</label>
+                <br />
+                <input type="file" id="userPhoto" name="Photo" />
+                <br />
+                <button>Upload</button>
+            </form>
+        </div>
+
         <div class="user-info">
-            <h2 id="user-name"> Welcome <%= username %>!</h2>
+                <h2 id="user-name"> Welcome <%= username %>!</h2>
             <p id="user-description" contenteditable="true">User Description: Click here to edit!</p>
         </div>
     </div>
