@@ -211,6 +211,7 @@ app.get('/discover', async (req, res) =>{
     max: 100,
     wear: req.query.wear || '', // use the query parameter
     itemgroup: req.query.itemgroup || '',
+    marketname: req.query.marketname,
   };
   axios({
       url: `https://www.steamwebapi.com/steam/api/items`,
@@ -229,6 +230,12 @@ app.get('/discover', async (req, res) =>{
       //   queryParams.itemgroup; // Assuming the API expects an array
       // }
       //let results = response.data;
+      if (req.query.search) {
+        console.log(item.marketname);
+        console.log(req.search.query);
+        results.data = results.data.filter(item => item.marketname.toLowerCase().includes(req.query.search.toLowerCase()));
+      }
+
       if (Array.isArray(results.data)) {
         // Apply sorting based on the 'sort' query parameter
         if (req.query.sort === 'High to Low') {
@@ -237,7 +244,7 @@ app.get('/discover', async (req, res) =>{
             results.data.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
         }
       }
-      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.sort});
+      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.sort, searchQuery: req.query.search});
   })
   .catch(error => {
       // Handle errors
