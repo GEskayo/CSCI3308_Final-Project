@@ -93,7 +93,7 @@ app.get('/detail-product', (req, res) => {
 app.get('/login', (req, res) => {
   const registered = req.query.registered;
   const message = registered ? 'Registration successful. Have fun SkineeDipping!' : '';
-  res.render('pages/login', { registeredMessage: message });
+  res.render('pages/home', { message : message });
 });
 
 
