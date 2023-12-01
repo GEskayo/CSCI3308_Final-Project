@@ -62,7 +62,7 @@ app.use(express.static(path.join(__dirname, 'views/pages')));
 const users = {
   username: undefined,
   id: undefined,
-}
+};
 
 
 app.use(
@@ -124,12 +124,11 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
-
-                req.session.user = { id: data[0].id, username: data[0].username };
-
+                  users.username = data[0].username;
+                  req.session.users = users;
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
-                  res.redirect('/home');
+                  res.redirect('/discover');
               }
               else{
                   console.log('Login failed, please try again');
@@ -224,35 +223,26 @@ app.get('/detail_product/:id', async (req, res) => {
 
 
 
-app.get('/user', async (req, res) => {
-  if (!req.session.user) {
-      return res.status(401).send('User not authenticated');
-  }
-
-  try {
-      const userId = req.session.user.id;
-      const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
-      res.render('user', { username: userData.username }); // Assuming 'user' is your EJS template
-  } catch (error) {
-      console.error('Error fetching user data:', error);
-      res.status(500).send('Internal Server Error');
-  }
+app.get('/user', (req, res) => {
+  res.render('pages/user', {
+    username: req.session.users.username,
+  });
 });
 
 
-app.get('/user-profile', async (req, res) => {
-  if (req.session.user && req.session.user.id) {
-      try {
-          const user = await db.one('SELECT username FROM users WHERE id = $1', req.session.user.id);
-          res.render('user-profile', { username: user.username });
-      } catch (error) {
-          console.error('Database error:', error);
-          res.redirect('/login');
-      }
-  } else {
-      res.redirect('/login');
-  }
-});
+// app.get('/user-profile', async (req, res) => {
+//   if (req.session.users && req.session.users.id) {
+//       try {
+//           const user = await db.one('SELECT username FROM users WHERE id = $1', req.session.users.id);
+//           res.render('user-profile', { username: users.username });
+//       } catch (error) {
+//           console.error('Database error:', error);
+//           res.redirect('/login');
+//       }
+//   } else {
+//       res.redirect('/login');
+//   }
+// });
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
@@ -376,6 +366,45 @@ req.session.destroy(err => {
     res.render('pages/login', { message: 'Logged out Successfully' });
 });
 });
+
+const fs=require('fs')
+//uploadPic POST
+app.post('/uploadPic', async(req, res) => {
+
+  console.log ("does it know thephoto?", req.body.userPhoto);
+  const data = readImageFile(req.body.userPhoto);
+
+  console.log("does it even know the user name?? ", req.session.users.username);
+
+  // query = `SELECT * FROM users WHERE username = $1`;
+  // username = req.session
+  pool.query(`INSERT INTO users(userPhoto) VALUES(BINARY(:userPhoto)) WHERE username = $2`,[{data}, req.session.users.username], function(err, res){
+    if(err) throw err
+    console.log("blob inserted")
+  })
+});
+
+//uploadPic GET
+app.get('/uploadPic', (req, res)=> {
+  const userPic = "userPic.png"
+  pool.query(`SELECT * FROM users where username = $1`,[req.session.users.username], function(err, res){
+    const row = res[0]
+    const data = row.userPhoto
+    console.log("blob data read")
+
+    const buf = new Buffer(data, 'binary')
+    fs.writeFileSync(output, buf) 
+
+    console.log("new file created", userPic)
+  })
+});
+
+//convert image to BLOB file
+function readImageFile(file){ 
+  const bitmap = fs.readFileSync(file)
+  const buf = new Buffer(bitmap)
+  return buf
+}
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
