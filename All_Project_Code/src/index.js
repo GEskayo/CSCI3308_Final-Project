@@ -54,6 +54,8 @@ app.use(express.static(path.join(__dirname, 'init_data')));
 app.use(express.static(path.join(__dirname, 'resource')));
 
 
+app.use(express.static(path.join(__dirname, 'views/pages')));
+
 const users = {
   username: undefined,
   id: undefined,
