@@ -15,7 +15,10 @@
     document.getElementById('searchInput').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             let searchQuery = event.target.value;
-            window.location.href = `/discover?marketname=${encodeURIComponent(searchQuery)}`;
+            var selectedSortOrder = document.getElementById('priceSort').value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            var selectedCategories = document.getElementById('categoryFilterForm').value;
+            window.location.href = `/discover?search=${encodeURIComponent(searchQuery)}&item_group=${encodeURIComponent(selectedCategories)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
         }
         });
 </script>
@@ -40,8 +43,9 @@
             var selectedCategories = this.value;
             var selectedSortOrder = document.getElementById('priceSort').value;
             var selectedCondition = document.getElementById('conditionFilter').value;
+            var searchQuery = document.getElementById('searchInput').value;
             // Redirect to the updated URL
-            window.location.href = `/discover?itemgroups=${encodeURIComponent(selectedCategoriesjoin)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
+            window.location.href = `/discover?item_group=${encodeURIComponent(selectedCategories)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&search=${encodeURIComponent(searchQuery)}`;
         });
     </script>
 
@@ -63,8 +67,8 @@
                               <li class="list-group-item">Rarity: <%= item.rarity %></li>
                             </ul>
                             <div class="card-body">
+                              <a href="detail_product/<%= item.id %>" class="btn btn-primary">View Details</a>
                               <a href="#" class="card-link">Card link</a>
-                              <a href="#" class="card-link">Another link</a>
                             </div>
                           </div>
                     </div>
@@ -100,7 +104,8 @@
           var selectedCondition = this.value;
           var selectedSortOrder = document.getElementById('priceSort').value;
           var selectedCategories = document.getElementById('categoryFilterForm').value;
-          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&itemgroup=${encodeURIComponent(selectedCategories)}`;
+          var searchQuery = document.getElementById('searchInput').value;
+          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&item_group=${encodeURIComponent(selectedCategories)}&search=${encodeURIComponent(searchQuery)}`;
           
         });
       </script>
@@ -117,7 +122,8 @@
             var selectedSortOrder = this.value;
             var selectedCondition = document.getElementById('conditionFilter').value;
             var selectedCategories = document.getElementById('categoryFilterForm').value;
-            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}&itemgroup=${encodeURIComponent(selectedCategories)}`;
+            var searchQuery = document.getElementById('searchInput').value;
+            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}&item_group=${encodeURIComponent(selectedCategories)}&search=${encodeURIComponent(searchQuery)}`;
         });
         </script>
     </div>
