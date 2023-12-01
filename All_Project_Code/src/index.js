@@ -62,6 +62,7 @@ app.use(express.static(path.join(__dirname, 'views/pages')));
 const users = {
   username: undefined,
   id: undefined,
+  userImage: undefined,
 }
 
 
@@ -169,8 +170,10 @@ app.post('/register', async (req, res) => {
       // Username is unique, proceed with hashing the password
       const hash = await bcrypt.hash(req.body.password, 10);
 
+      // Default userimage
+      const image = "../resource/images/favicon.png";
       // Insert username and hashed password into 'users' table
-      await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+      await db.none('INSERT INTO users(username, password, userImage) VALUES($1, $2, $3)', [req.body.username, hash, image]);
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
@@ -368,6 +371,17 @@ req.session.destroy(err => {
     res.clearCookie('sid');
     res.render('pages/login', { message: 'Logged out Successfully' });
 });
+});
+
+
+//uploadPic POST
+app.put('/uploadPic', async(req, res) => {
+  const photo = document.getElementById("userPhoto")
+  console.log("does it even know the user name?? ", req.session.users.username);
+
+  // query = `SELECT * FROM users WHERE username = $1`;
+  // username = req.session
+  await db.none(`INSERT INTO users(userImage) VALUES($1) WHERE username = $2`,[photo, req.session.users.username])
 });
 
 // *****************************************************
