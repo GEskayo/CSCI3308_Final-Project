@@ -62,8 +62,7 @@ app.use(express.static(path.join(__dirname, 'views/pages')));
 const users = {
   username: undefined,
   id: undefined,
-  userImage: undefined,
-}
+};
 
 
 app.use(
@@ -125,8 +124,7 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
-                  users.username = data.username;
-
+                  users.username = data[0].username;
                   req.session.users = users;
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
@@ -170,10 +168,8 @@ app.post('/register', async (req, res) => {
       // Username is unique, proceed with hashing the password
       const hash = await bcrypt.hash(req.body.password, 10);
 
-      // Default userimage
-      const image = "../resource/images/favicon.png";
       // Insert username and hashed password into 'users' table
-      await db.none('INSERT INTO users(username, password, userImage) VALUES($1, $2, $3)', [req.body.username, hash, image]);
+      await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
 
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
@@ -231,8 +227,6 @@ app.get('/user', (req, res) => {
   res.render('pages/user', {
     username: req.session.users.username,
   });
-  console.log(username);
-  console.log(req.session.users.username)
 });
 
 
@@ -373,16 +367,44 @@ req.session.destroy(err => {
 });
 });
 
-
+const fs=require('fs')
 //uploadPic POST
-app.put('/uploadPic', async(req, res) => {
-  const photo = document.getElementById("userPhoto")
+app.post('/uploadPic', async(req, res) => {
+
+  console.log ("does it know thephoto?", req.body.userPhoto);
+  const data = readImageFile(req.body.userPhoto);
+
   console.log("does it even know the user name?? ", req.session.users.username);
 
   // query = `SELECT * FROM users WHERE username = $1`;
   // username = req.session
-  await db.none(`INSERT INTO users(userImage) VALUES($1) WHERE username = $2`,[photo, req.session.users.username])
+  pool.query(`INSERT INTO users(userPhoto) VALUES(BINARY(:userPhoto)) WHERE username = $2`,[{data}, req.session.users.username], function(err, res){
+    if(err) throw err
+    console.log("blob inserted")
+  })
 });
+
+//uploadPic GET
+app.get('/uploadPic', (req, res)=> {
+  const userPic = "userPic.png"
+  pool.query(`SELECT * FROM users where username = $1`,[req.session.users.username], function(err, res){
+    const row = res[0]
+    const data = row.userPhoto
+    console.log("blob data read")
+
+    const buf = new Buffer(data, 'binary')
+    fs.writeFileSync(output, buf) 
+
+    console.log("new file created", userPic)
+  })
+});
+
+//convert image to BLOB file
+function readImageFile(file){ 
+  const bitmap = fs.readFileSync(file)
+  const buf = new Buffer(bitmap)
+  return buf
+}
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
