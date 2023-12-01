@@ -8,7 +8,7 @@
 /* Remove focus highlight */
 .form-control:focus {
     background-color: transparent;
-    border-color: #A9A9A9;
+    color: #A9A9A9;
 
 }
 
@@ -16,12 +16,12 @@
 .btn-primary {
     background-color: transparent; /* Dark grey background */
     color: white; /* White text */
-    border: 2px solid #007BFF; /* Larger border */
+    border: 2px solid #F02D3A; /* Larger border */
 }
 
 /* Hover and active states for buttons */
 .btn-primary:hover, .btn-primary:active {
-    background-color: #007BFF; /* Medium blue */
+    background-color: #F02D3A; /* Medium blue */
     color: white;
 }
 
@@ -42,8 +42,7 @@ p, a {
 
 /* Set the background color of the body */
 body {
-
-    background-color: rgb(79, 79, 104); /* Dark grey background */
+    background-color: #273043; /* Dark grey background */
 }
 
 /* Additional styles for alert messages */
@@ -132,10 +131,18 @@ body {
  
 }
 
-.red-text {
-    color: #ae0000;
+.light-grey-text {
+    color: #A9A9A9;
 }
 
 .light-grey-background {
     background-color: rgb(46, 46, 46);
+}
+
+.drop-shadow {
+    text-shadow: 0px 0px 5px #000000;
+}
+
+.light-on-hover:hover {
+    color: #EFF6EE;
 }

@@ -1,0 +1,12 @@
+Decisions made
+Alternative actions/options discussed
+Follow-up items, including agreed-on roles and responsibilities You may or may not have content for each of the points above.
+
+ - Discover page cards showing
+ - Kaleb make Discover page fully working
+    - Kaleb search implementation added to the search bar
+ - Merge issue with references in the login page
+ - Home page fleshed out
+ - Bryce working on uploading photos to user profiles
+ - Gil finishing User Page
+ - Joey quality of life, graphics, css
