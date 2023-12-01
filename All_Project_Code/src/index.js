@@ -178,6 +178,45 @@ app.post('/register', async (req, res) => {
   }
 });
 
+app.get('/detail_product/:id', async (req, res) => {
+  const productId = req.params.id;
+  // Fetch product details from the API using the productId
+  //console.log(req.url)
+  axios({
+      url: `https://www.steamwebapi.com/steam/api/items`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: {
+        key: process.env.API_KEY,
+        game: 'csgo',
+      }
+    })
+  .then(results => {
+    const product = results.data.find(item => item.id === productId);
+
+    if (product) {
+      // Render the detail_product page with the found product
+      res.render('pages/detail_product', { results: product });
+    } else {
+      // Product with the given ID not found
+      res.render('pages/detail_product', { error: 'Product not found' });
+    }
+  })
+  .catch(error => {
+      // Handle errors
+      console.error('error message: ', error.message);
+      if(error.message){
+        console.error('error results: ', error.results);
+      };
+
+      res.render('pages/discover', {results: [], error: 'API call failed'});
+  });
+
+});
+
 
 
 app.get('/user', async (req, res) => {
@@ -226,46 +265,76 @@ app.get('/home', (req, res) => {
 });
 
 // Discover
-app.get('/discover', (req, res) => {
-  res.render('pages/discover');
-});
-  
+// app.get('/discover', (req, res) => {
+//   res.render('pages/discover');
+// });
+  //
 // } catch (error) {
 //   console.error('Error fetching events:', error);
 //   res.render('pages/discover', { results: [] });
 // }
 
+// Mohammad did most of the work thank you 
 
+app.get('/discover', async (req, res) =>{
+  //console.log(results);
+  let error = null;
+  let queryParams = {
+    key: process.env.API_KEY,
+    page: '1',
+    game: 'csgo',
+    max: 100,
+    wear: req.query.wear || '', // use the query parameter
+    item_group: req.query.item_group || '',
+    search: req.query.search,
+  };
+  axios({
+      url: `https://www.steamwebapi.com/steam/api/items`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        'Accept-Encoding': 'application/json',
+      },
+      params: queryParams
+    })
+  .then(results => {
+      //console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+      //console.log(results);
+      // if (req.query.itemgroups) {
+      //   // Add itemgroups to queryParams
+      //   queryParams.itemgroup; // Assuming the API expects an array
+      // }
+      //let results = response.data;
+      //console.log(req.url);
+    //console.log(req.query.search);
+      if (req.query.search) {
+        //console.log(item.marketname);
+        //console.log(req.search.query);
+        results.data = results.data.filter(item => req.query.search.toLowerCase().includes(req.query.search.toLowerCase()));
+      }
 
-// app.get('/discover', async (req, res) =>{
-//   axios({
-//       url: `https://www.steamwebapi.com/steam/api/items`,
-//       method: 'GET',
-//       dataType: 'json',
-//       headers: {
-//         'Accept-Encoding': 'application/json',
-//       },
-//       params: {
-//         key: process.env.API_KEY,
-//         game: '1',
-//         sort_by: 'priceAz',
-//         item_type: 'null',
-//       },
-//     })
-//   .then(results => {
-//       console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-      
-//       res.render('views/pages/discover', {results: results.data});
-//   })
-//   .catch(error => {
-//       // Handle errors
-//       console.error(error);
+      if (Array.isArray(results.data)) {
+        // Apply sorting based on the 'sort' query parameter
+        if (req.query.sort === 'High to Low') {
+            results.data.sort((a, b) => parseFloat(b.priceavg) - parseFloat(a.priceavg));
+        } else if (req.query.sort === 'Low to High') {
+            results.data.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
+        }
+      }
+      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.item_group, searchQuery: req.query.search});
+  })
+  .catch(error => {
+      // Handle errors
+      console.error('error message: ', error.message);
+      if(error.message){
+        console.error('error results: ', error.results);
+      };
 
-//       res.render('views/pages/discover', {results: [], error: 'API call failed'});
-//   });
+      res.render('pages/discover', {results: [], error: 'API call failed'});
+  });
 
-//   //res.render('pages/discover');
-// })
+  //res.render('pages/discover');
+})
 
 
 

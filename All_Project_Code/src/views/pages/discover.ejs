@@ -8,26 +8,82 @@
   <!-- Search bar section -->
   <div class="row justify-content-center mb-4">
     <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Search...">
+      <input type="text" class="form-control" id="searchInput" placeholder="Search...">
     </div>
   </div>
+  <script>
+    document.getElementById('searchInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            let searchQuery = event.target.value;
+            var selectedSortOrder = document.getElementById('priceSort').value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            var selectedCategories = document.getElementById('categoryFilterForm').value;
+            window.location.href = `/discover?search=${encodeURIComponent(searchQuery)}&item_group=${encodeURIComponent(selectedCategories)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}`;
+        }
+        });
+</script>
 
-  <div class="row no-gutters">
-    <!-- Left sidebar for displaying categories -->
+  <div class="row">
+    <!-- Category Filter -->
     <div class="col-md-2">
-      <h5>Categories</h5>
-      <ul class="list-unstyled">
-        <li><a href="#">Assault Rifle</a></li>
-        <li><a href="#">Submachine Gun</a></li>
-        <li><a href="#">Knives</a></li>
-        <li><a href="#">Secondaries</a></li>
-      </ul>
+        <label for="categoryFilterForm" class="form-label">Category</label>
+            <select class="form-select" id="categoryFilterForm">
+                <option value="rifle" <% if (selectedCategories === 'rifle') { %>selected<% } %>> Assault Rifle</option>
+                <option value="sniper rifle" <% if (selectedCategories === 'sniper rifle') { %>selected<% } %>> Sniper Rifles</option>
+                <option value="knife" <% if (selectedCategories === 'knife') { %>selected<% } %>> Knives</option>
+                <option value="pistol" <% if (selectedCategories === 'pistol') { %>selected<% } %>> Pistols</option>
+                <option value="smg" <% if (selectedCategories === 'smg') { %>selected<% } %>> Submachine Guns</option>
+                <option value="shotgun" <% if (selectedCategories === 'shotgun') { %>selected<% } %>> Shotguns</option>
+                <option value="machinegun" <% if (selectedCategories === 'machinegun') { %>selected<% } %>> Light Machine Guns (LMG)</option>
+                <option value="graffiti" <% if (selectedCategories === 'graffiti') { %>selected<% } %>> Graffiti</option>
+            </select>
     </div>
+    <script>
+        document.getElementById('categoryFilterForm').addEventListener('change', function() {
+            var selectedCategories = this.value;
+            var selectedSortOrder = document.getElementById('priceSort').value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            var searchQuery = document.getElementById('searchInput').value;
+            // Redirect to the updated URL
+            window.location.href = `/discover?item_group=${encodeURIComponent(selectedCategories)}&wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&search=${encodeURIComponent(searchQuery)}`;
+        });
+    </script>
 
     <!-- Main content area -->
     <div class="col-md-8">
+        <div class="row row-cols-auto">
+            <% if (results && results.length > 0) { %>
+                <% results.forEach(item => { %>
+                    <div class="item">
+                        <div class="card" style="width: 18rem;">
+                            <img src="<%= item.itemimage %>" class="card-img-top" alt="Image of skin">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= item.marketname %></h5>
+                              <p class="card-text">Average Price in USD: $<%= item.priceavg %></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item">Type of Weapon: <%= item.itemtype %></li>
+                              <li class="list-group-item">Item Name: <%= item.itemname %></li>
+                              <li class="list-group-item">Rarity: <%= item.rarity %></li>
+                            </ul>
+                            <div class="card-body">
+                              <a href="detail_product/<%= item.id %>" class="btn btn-primary">View Details</a>
+                              <a href="#" class="card-link">Card link</a>
+                            </div>
+                          </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No items found or there was an error.</p>
+                <% if (error) { %>
+                    <p>Error: <%= error %></p>
+                <% } %>
+            <% } %>
+            </div>
+        </div>
+
       <!-- Content to be inserted here -->
-    </div>
+
 
     <!-- Right sidebar for filters -->
     <div class="col-md-2">
@@ -36,21 +92,40 @@
       <div class="mb-3">
         <label for="conditionFilter" class="form-label">Condition</label>
         <select class="form-select" id="conditionFilter">
-          <option>Factory New</option>
-          <option>Minimal Wear</option>
-          <option>Field Tested</option>
-          <option>Well Worn</option>
-          <option>Battle Scarred</option>
+            <option value="fn" <% if (selectedWear === 'fn') { %>selected<% } %>>Factory New</option>
+            <option value="mw" <% if (selectedWear === 'mw') { %>selected<% } %>>Minimal Wear</option>
+            <option value="ft" <% if (selectedWear === 'ft') { %>selected<% } %>>Field Tested</option>
+            <option value="ww" <% if (selectedWear === 'ww') { %>selected<% } %>>Well Worn</option>
+            <option value="bs" <% if (selectedWear === 'bs') { %>selected<% } %>>Battle Scarred</option>
         </select>
       </div>
+      <script>
+        document.getElementById('conditionFilter').addEventListener('change', function() {
+          var selectedCondition = this.value;
+          var selectedSortOrder = document.getElementById('priceSort').value;
+          var selectedCategories = document.getElementById('categoryFilterForm').value;
+          var searchQuery = document.getElementById('searchInput').value;
+          window.location.href = `/discover?wear=${encodeURIComponent(selectedCondition)}&sort=${encodeURIComponent(selectedSortOrder)}&item_group=${encodeURIComponent(selectedCategories)}&search=${encodeURIComponent(searchQuery)}`;
+          
+        });
+      </script>
       <!-- Filter for sorting by price -->
       <div class="mb-3">
         <label for="priceSort" class="form-label">Sort by Price</label>
         <select class="form-select" id="priceSort">
-          <option>High to Low</option>
-          <option>Low to High</option>
-        </select>
+            <option value="High to Low" <% if (selectedSort === 'High to Low') { %>selected<% } %>>High to Low</option>
+            <option value="Low to High" <% if (selectedSort === 'Low to High') { %>selected<% } %>>Low to High</option>
+        </select>    
       </div>
+      <script>
+        document.getElementById('priceSort').addEventListener('change', function() {
+            var selectedSortOrder = this.value;
+            var selectedCondition = document.getElementById('conditionFilter').value;
+            var selectedCategories = document.getElementById('categoryFilterForm').value;
+            var searchQuery = document.getElementById('searchInput').value;
+            window.location.href = `/discover?sort=${encodeURIComponent(selectedSortOrder)}&wear=${encodeURIComponent(selectedCondition)}&item_group=${encodeURIComponent(selectedCategories)}&search=${encodeURIComponent(searchQuery)}`;
+        });
+        </script>
     </div>
   </div>
 </div>
