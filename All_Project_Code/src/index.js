@@ -122,12 +122,12 @@ app.post('/login', async (req, res) => {
 
               
               if(match){
+                  users.username = data.username;
 
-                req.session.user = { id: data[0].id, username: data[0].username };
-
+                  req.session.users = users;
                   //res.json({status: 'success', message: 'success'});
                   req.session.save();
-                  res.redirect('/home');
+                  res.redirect('/discover');
               }
               else{
                   console.log('Login failed, please try again');
@@ -222,35 +222,28 @@ app.get('/detail_product/:id', async (req, res) => {
 
 
 
-app.get('/user', async (req, res) => {
-  if (!req.session.user) {
-      return res.status(401).send('User not authenticated');
-  }
-
-  try {
-      const userId = req.session.user.id;
-      const userData = await db.one('SELECT * FROM users WHERE id = $1', userId);
-      res.render('user', { username: userData.username }); // Assuming 'user' is your EJS template
-  } catch (error) {
-      console.error('Error fetching user data:', error);
-      res.status(500).send('Internal Server Error');
-  }
+app.get('/user', (req, res) => {
+  res.render('pages/user', {
+    username: req.session.users.username,
+  });
+  console.log(username);
+  console.log(req.session.users.username)
 });
 
 
-app.get('/user-profile', async (req, res) => {
-  if (req.session.user && req.session.user.id) {
-      try {
-          const user = await db.one('SELECT username FROM users WHERE id = $1', req.session.user.id);
-          res.render('user-profile', { username: user.username });
-      } catch (error) {
-          console.error('Database error:', error);
-          res.redirect('/login');
-      }
-  } else {
-      res.redirect('/login');
-  }
-});
+// app.get('/user-profile', async (req, res) => {
+//   if (req.session.users && req.session.users.id) {
+//       try {
+//           const user = await db.one('SELECT username FROM users WHERE id = $1', req.session.users.id);
+//           res.render('user-profile', { username: users.username });
+//       } catch (error) {
+//           console.error('Database error:', error);
+//           res.redirect('/login');
+//       }
+//   } else {
+//       res.redirect('/login');
+//   }
+// });
 
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
