@@ -8,13 +8,9 @@
     <div class="row justify-content-center">
       <div class="col-md-5">
         <!-- Registration card container -->
-
-
-
-        <div class="light-grey-background light-text card border-0">
           <div class="card-body">
             <!-- Registration form heading -->
-            <h1 class="text-center mb-4">Register</h1>
+            <h1 class="text-center mb-4 light-grey-text drop-shadow">Register</h1>
             <!-- Error message placeholder (hidden by default) -->
             <% if (typeof message !== 'undefined' && message) { %>
               <div class="alert alert-danger" role="alert">
@@ -25,12 +21,12 @@
             <form action="/register" method="POST">
               <!-- Username input field -->
               <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label light-grey-text">Username</label>
                 <input type="text" id="username" name="username" class="form-control" required>
               </div>
               <!-- Password input field -->
               <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label light-grey-text">Password</label>
                 <input type="password" id="password" name="password" class="form-control" required>
               </div>
               <!-- Submit button for the form -->
@@ -41,8 +37,6 @@
             <!-- Link to login page for users who already have an account -->
             <div class="text-center mt-3">
               <p>Already have an account? <a href="/login">Login</a></p>
-
-        </div>
       </div>
     </div>
   </div>

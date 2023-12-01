@@ -1,0 +1,13 @@
+What's Changed
+Trying to fix main by @GEskayo in #16
+Kaleb by @notParry in #15
+Safety commit with logo and Favicon added by @jotu7294 in #17
+edit user page description by @Brog6754 in #18
+updated index.js to make req.session work as intended and save users … by @Brog6754 in #19
+CSS reformatting and updating (wip) by @jotu7294 in #24
+Gil by @GEskayo in #25
+Kaleb by @notParry in #26
+Favicon and Logo working, static pathing added by @jotu7294 in #27
+Kaleb by @notParry in #28
+CSS added and quality-of-life text effects started by @jotu7294 in #29
+Full Changelog: v1.0.0...v1.1.0
