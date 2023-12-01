@@ -1,27 +1,38 @@
-.form-group {
-    color: #A9A9A9;
-}
-
+/* Custom styles for input fields */
 .form-control {
-    color: #A9A9A9;
+    border: 3px solid #A9A9A9; /* Larger border */
+    background-color: transparent; /* Transparent background */
+    color: #A9A9A9; /* Light grey text color */
 }
 
+/* Remove focus highlight */
+.form-control:focus {
+    background-color: transparent;
+    border-color: #A9A9A9;
+
+}
+
+/* Custom styles for buttons */
 .btn-primary {
-    background-color: #4F4F4F;
-    color: #A9A9A9;
+    background-color: transparent; /* Dark grey background */
+    color: white; /* White text */
+    border: 2px solid #007BFF; /* Larger border */
 }
 
-p {
-    color: #A9A9A9;
+/* Hover and active states for buttons */
+.btn-primary:hover, .btn-primary:active {
+    background-color: #007BFF; /* Medium blue */
+    color: white;
 }
 
-a {
-    color: #A9A9A9;
+/* Custom styles for paragraphs and links */
+p, a {
+    color: #A9A9A9; /* Light grey text color */
 }
 
-/* Custom CSS to make the container full width */
+/* Custom styles for the container */
 .container {
-    width: 100%;
+    width: 95%;
     max-width: 100%;
     padding-right: 0;
     padding-left: 0;
@@ -31,19 +42,94 @@ a {
 
 /* Set the background color of the body */
 body {
-    background-color: #161616;
+
+    background-color: rgb(79, 79, 104); /* Dark grey background */
 }
 
-/* Class tags for specific styles */
-
-.light-text {
-    color: #A9A9A9;
+/* Additional styles for alert messages */
+.alert {
+    border: 2px solid #f40909; /* Larger border for alerts */
 }
 
+.user-profile {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 8px;
+}
 
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-.padding-left {
-    padding-left: 20px;
+.profile-picture-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin-right: 20px;
+}
+
+#profile-picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-picture-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.profile-upload-btn {
+    background-color: #4F4F4F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-picture-container:hover .profile-picture-overlay {
+    display: flex;
+}
+
+.user-info h2 {
+    margin: 0;
+    color: #333;
+}
+
+#user-description {
+    color: #666;
+    font-style: italic;
+}
+
+.user-products h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#products-container {
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#no-products-message {
+    color: #666;
+ 
 }
 
 .red-text {

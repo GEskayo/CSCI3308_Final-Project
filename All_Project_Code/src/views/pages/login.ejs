@@ -5,46 +5,42 @@
 <%- include ('../partials/menu', { pageType: 'login' }) %>
 
 <main>
-  <div class="container mt-5">
-    <!-- Display a success message if the user has just registered -->
-    <% if (locals.registered) { %>
-      <div class="alert alert-success" role="alert">
-        Registration successful. Have fun SkineeDipping!
-      </div>
-    <% } %>
-
-    <!-- Login form container -->
-    <div class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="light-grey-background light-text card border-0">
-          <div class="card-body">
-            <!-- Form for login, POST method sends data to server -->
-            <form action="/login" method="POST">
-              <h1 class="text-center mb-4">Login</h1>
-              <!-- Username input field -->
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" name="username" class="form-control" required>
-              </div>
-              <!-- Password input field -->
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-              </div>
-              <!-- Submit button for the form -->
-              <div class="d-grid gap-2">
-                <input type="submit" value="Login" class="btn btn-primary">
-              </div>
-            </form>
-            <!-- Link to registration page for users who don't have an account -->
-            <div class="text-center mt-3">
-              <p>Don't have an account? <a href="/register">Register</a></p>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <!-- Display a success message if the user has just registered -->
+                <% if (message) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= message %>
+                    </div>
+                <% } %>
+                
+                        <!-- Form for login, POST method sends data to server -->
+                        <form action="/login" method="POST">
+                            <h1 class="text-center mb-4">Login</h1>
+                            <!-- Username input field -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <!-- Password input field -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <!-- Submit button for the form -->
+                            <div class="d-grid gap-2">
+                                <input type="submit" value="Login" class="btn btn-primary">
+                            </div>
+                        </form>
+                        <!-- Link to registration page for users who don't have an account -->
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="/register">Register</a></p>
+                   
+   
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </main>
 
 <!-- Include the 'footer' partial for the page footer -->

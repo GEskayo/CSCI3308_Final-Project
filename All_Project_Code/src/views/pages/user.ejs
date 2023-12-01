@@ -3,10 +3,17 @@
 
 <div class="user-profile">
     <div class="profile-header">
-        <img id="profile-picture" src="/path/to/default/image.jpg" alt="Profile Picture">
+        <div class="profile-picture-container">
+            <img id="profile-picture" src="../../resource/images/skinee-logo.png" alt="Profile Picture">
+            <div class="profile-picture-overlay">
+                <button class="profile-upload-btn">Upload Photo</button>
+                <!-- You can also include a hidden file input here if needed -->
+            </div>
+        </div>
         <div class="user-info">
-            <h2 id="user-name"> Welcome <%= username %>!</h2>
-            <p id="user-description" contenteditable="true">User Description: Click here to edit!</p>
+
+            <h2 id="user-name"><%= username %></h2> <!-- Display the username -->
+            <p id="user-description" contenteditable="true">I like SkinnyDipping</p>
         </div>
     </div>
     <div class="user-products">
