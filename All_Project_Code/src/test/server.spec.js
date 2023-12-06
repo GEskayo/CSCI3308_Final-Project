@@ -128,6 +128,7 @@ describe('Server!', () => {
 
 // //positive test case for /discover API (still needs the pass test case)
 // it('Positive: /discover - Data Retrieved Successfully', done => {
+  
 //   chai
 //     .request(server)
 //     .get('/discover')
@@ -146,21 +147,21 @@ describe('Server!', () => {
 // }).timeout(7000);
 
 // //negative test case for /discover API
-// it('Negative: /discover - API Call Fails', done => {
-//   // Mock the axios call to simulate a failure
-//   sinon.stub(axios, 'get').rejects(new Error('API call failed'));
+it('Negative: /discover - API Call Fails', done => {
+  // Mock the axios call to simulate a failure
+  sinon.stub(axios, 'get').rejects(new Error('API call failed'));
 
-//   chai
-//     .request(server)
-//     .get('/discover')
-//     .end((err, res) => {
-//       expect(res).to.have.status(500); // Assuming a 500 status code is returned on API failure
-//       expect(res.body).to.be.an('object');
-//       expect(res.body.error).to.equal('API call failed');
-//       axios.get.restore(); // Restore the original axios.get function
-//       done();
-//     });
-// });
+  chai
+    .request(server)
+    .get('/discover')
+    .end((err, res) => {
+      expect(res).to.have.status(500); // Assuming a 500 status code is returned on API failure
+      expect(res.body).to.be.an('object');
+      expect(res.body.error).to.equal('API call failed');
+      axios.get.restore(); // Restore the original axios.get function
+      done();
+    });
+});
 
 // //postive test case for /home page API
 it('Positive: /home - User Logged In', done => {
