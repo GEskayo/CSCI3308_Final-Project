@@ -174,6 +174,7 @@ app.post('/register', async (req, res) => {
       // Redirect to GET /login route page after data has been inserted successfully
       // Pass a query parameter for successful registration
       // After successful registration
+      //res.json({status: 'Success', message: 'Success'});
       res.redirect('/login?registered=true');
     }
   } catch (error) {
@@ -203,9 +204,13 @@ app.get('/detail_product/:id', async (req, res) => {
 
     if (product) {
       // Render the detail_product page with the found product
+      //res.json({object: ''});
+      //res.json({id: '00706590-f442-441d-b653-ef683a0306bf'})
       res.render('pages/detail_product', { results: product });
     } else {
       // Product with the given ID not found
+      res.status(404);
+      //res.json({error: 'Product not Found'});
       res.render('pages/detail_product', { error: 'Product not found' });
     }
   })
@@ -316,6 +321,7 @@ app.get('/discover', async (req, res) =>{
             results.data.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
         }
       }
+      //res.json({results: []});
       res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.item_group, searchQuery: req.query.search});
   })
   .catch(error => {
@@ -324,7 +330,7 @@ app.get('/discover', async (req, res) =>{
       if(error.message){
         console.error('error results: ', error.results);
       };
-
+      //res.json({error: "API call failed"});
       res.render('pages/discover', {results: [], error: 'API call failed'});
   });
 
