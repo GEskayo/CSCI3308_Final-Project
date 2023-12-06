@@ -1,13 +1,12 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu', { pageType: 'user' }) %>
 
-
 <div class="user-profile">
     <div class="profile-header">
         <div class="profile-picture-container">
-            <img id="profile-picture" src="../../resource/images/skinee-logo.png" alt="Profile Picture">
+            <img id="profile-picture" src="/images/skinee-logo.png" alt="Profile Picture">
             <div class="profile-picture-overlay">
-                <form action="/uploadPic" method="PUT" enctype="multipart/form-data" >
+                <form action="/uploadPic" method="PUT" enctype="multipart/form-data">
                     <label for="file">Update User Pic</label>
                     <br />
                     <input type="file" id="userPhoto" name="Photo" />
@@ -17,9 +16,14 @@
             </div>
         </div>
         <div class="user-info">
-
             <h2 id="user-name"><%= username %></h2> <!-- Display the username -->
-            <p id="user-description" contenteditable="true">I like SkinnyDipping</p>
+            <!-- User Description Form -->
+            <form action="/saveDescription" method="post">
+                <textarea name="description" id="user-description" placeholder="Enter your description here...">
+                    <%= userDescription || 'I like SkineeDipping' %>
+                </textarea>
+                <button type="submit">Save Description</button>
+            </form>
         </div>
     </div>
     <div class="user-products">

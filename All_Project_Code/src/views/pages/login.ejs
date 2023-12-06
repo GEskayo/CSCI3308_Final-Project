@@ -1,47 +1,40 @@
-<!-- Include the 'head' partial to add head elements like CSS links, meta tags, etc. -->
 <%- include ('../partials/head') %>
-
-<!-- Include the 'menu' partial with 'pageType' set to 'login' for the navigation menu -->
 <%- include ('../partials/menu', { pageType: 'login' }) %>
 
 <main>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-5">
-                <!-- Display a success message if the user has just registered -->
                 <% if (message) { %>
                     <div class="alert alert-success" role="alert">
                         <%= message %>
                     </div>
                 <% } %>
                 
-                        <!-- Form for login, POST method sends data to server -->
-                        <form action="/login" method="POST">
-                            <h1 class="text-center mb-4 drop-shadow light-grey-text">Login</h1>
-                            <!-- Username input field -->
-                            <div class="mb-3">
-                                <label for="username" class="form-label light-grey-text">Username</label>
-                                <input type="text" id="username" name="username" class="form-control light-grey-text" required>
-                            </div>
-                            <!-- Password input field -->
-                            <div class="mb-3">
-                                <label for="password" class="form-label light-grey-text">Password</label>
-                                <input type="password" id="password" name="password" class="form-control light-grey-text" required>
-                            </div>
-                            <!-- Submit button for the form -->
-                            <div class="d-grid gap-2">
-                                <input type="submit" value="Login" class="btn btn-primary">
-                            </div>
-                        </form>
-                        <!-- Link to registration page for users who don't have an account -->
-                        <div class="text-center mt-3">
-                            <p>Don't have an account? <a href="/register">Register</a></p>
-                   
-   
+                <form action="/login" method="POST">
+                    <h1 class="text-center mb-4 drop-shadow light-grey-text">Login</h1>
+                    <div class="mb-3">
+                        <label for="username" class="form-label light-grey-text">Username</label>
+                        <input type="text" id="username" name="username" class="form-control light-grey-text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label light-grey-text">Password</label>
+                        <input type="password" id="password" name="password" class="form-control light-grey-text" required>
+                    </div>
+                    <!-- Hidden input for redirectedFrom -->
+                    <% if (typeof redirectedFrom !== 'undefined' && redirectedFrom) { %>
+                        <input type="hidden" name="redirectedFrom" value="<%= redirectedFrom %>">
+                    <% } %>
+                    <div class="d-grid gap-2">
+                        <input type="submit" value="Login" class="btn btn-primary">
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Don't have an account? <a href="/register">Register</a></p>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
-<!-- Include the 'footer' partial for the page footer -->
 <%- include ('../partials/footer') %>
