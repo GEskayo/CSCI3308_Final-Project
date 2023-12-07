@@ -28,6 +28,7 @@
     <div class="col-md-2">
         <label for="categoryFilterForm" class="form-label">Category</label>
             <select class="form-select" id="categoryFilterForm">
+                <option value="">None</option>
                 <option value="rifle" <% if (selectedCategories === 'rifle') { %>selected<% } %>> Assault Rifle</option>
                 <option value="sniper rifle" <% if (selectedCategories === 'sniper rifle') { %>selected<% } %>> Sniper Rifles</option>
                 <option value="knife" <% if (selectedCategories === 'knife') { %>selected<% } %>> Knives</option>
@@ -92,6 +93,7 @@
       <div class="mb-3">
         <label for="conditionFilter" class="form-label">Condition</label>
         <select class="form-select" id="conditionFilter">
+            <option value=""> None </option>
             <option value="fn" <% if (selectedWear === 'fn') { %>selected<% } %>>Factory New</option>
             <option value="mw" <% if (selectedWear === 'mw') { %>selected<% } %>>Minimal Wear</option>
             <option value="ft" <% if (selectedWear === 'ft') { %>selected<% } %>>Field Tested</option>

@@ -1,13 +1,19 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu', { pageType: 'user' }) %>
 
+
 <div class="user-profile">
     <div class="profile-header">
         <div class="profile-picture-container">
             <img id="profile-picture" src="../../resource/images/skinee-logo.png" alt="Profile Picture">
             <div class="profile-picture-overlay">
-                <button class="profile-upload-btn">Upload Photo</button>
-                <!-- You can also include a hidden file input here if needed -->
+                <form action="/uploadPic" method="PUT" enctype="multipart/form-data" >
+                    <label for="file">Update User Pic</label>
+                    <br />
+                    <input type="file" id="userPhoto" name="Photo" />
+                    <br />
+                    <button class="profile-upload-button">Upload</button>
+                </form>
             </div>
         </div>
         <div class="user-info">
@@ -17,6 +23,8 @@
         </div>
     </div>
     <div class="user-products">
+        <h2 id="user-name"> Welcome <%= username %>!</h2>        
+        <br>
         <h3>Products I'm Following</h3>
         <div id="products-container">
             <!-- Products will be inserted here -->
