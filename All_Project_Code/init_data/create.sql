@@ -13,3 +13,12 @@ CREATE TABLE userPage (
     user_desc VARCHAR(255),
     profile_pic VARCHAR(255)
 );
+
+DROP TABLE IF EXISTS bookmarks;
+CREATE TABLE bookmarks (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    product_id INTEGER NOT NULL,
+    product_name VARCHAR(255) NOT NULL, -- Optional, for display purposes
+    product_image VARCHAR(255) -- Optional, for display purposes
+);

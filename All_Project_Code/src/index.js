@@ -263,21 +263,22 @@ app.use('/uploads', express.static('src/uploads'));
 
 app.get('/user', async (req, res) => {
   if (!req.session.users || !req.session.users.id) {
-      // Redirect to login if the user is not logged in
       return res.redirect('/login?redirectedFrom=user');
   }
 
   try {
-      // Fetch user description and profile picture from the database
       const userProfileData = await db.oneOrNone('SELECT user_desc, profile_pic FROM userPage WHERE user_id = $1', [req.session.users.id]);
+      // Fetch bookmarks from the database
+      const bookmarks = await db.manyOrNone('SELECT * FROM bookmarks WHERE user_id = $1', [req.session.users.id]);
 
       res.render('pages/user', {
           username: req.session.users.username,
-          userDescription: userProfileData && userProfileData.user_desc ? userProfileData.user_desc : 'I like SkineeDipping',
-          profilePic: userProfileData && userProfileData.profile_pic ? userProfileData.profile_pic : '/images/skinee-logo.png'
+          userDescription: userProfileData ? userProfileData.user_desc : 'I like SkineeDipping',
+          profilePic: userProfileData ? userProfileData.profile_pic : '/images/skinee-logo.png',
+          bookmarks: bookmarks // Include bookmarks in the data sent to the EJS template
       });
   } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error:', error);
       res.redirect('/login');
   }
 });
@@ -350,68 +351,92 @@ app.get('/home', (req, res) => {
 //   res.render('pages/discover', { results: [] });
 // }
 
-// Mohammad did most of the work thank you 
 
-app.get('/discover', async (req, res) =>{
-  //console.log(results);
-  let error = null;
-  let queryParams = {
-    key: process.env.API_KEY,
-    page: '1',
-    game: 'csgo',
-    max: 100,
-    wear: req.query.wear || '', // use the query parameter
-    item_group: req.query.item_group || '',
-    search: req.query.search,
-  };
-  axios({
-      url: `https://www.steamwebapi.com/steam/api/items`,
-      method: 'GET',
-      dataType: 'json',
-      headers: {
-        'Accept-Encoding': 'application/json',
-      },
-      params: queryParams
-    })
-  .then(results => {
-      //console.log(results.data); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-      //console.log(results);
-      // if (req.query.itemgroups) {
-      //   // Add itemgroups to queryParams
-      //   queryParams.itemgroup; // Assuming the API expects an array
-      // }
-      //let results = response.data;
-      //console.log(req.url);
-    //console.log(req.query.search);
-      if (req.query.search) {
-        //console.log(item.marketname);
-        //console.log(req.search.query);
-        results.data = results.data.filter(item => req.query.search.toLowerCase().includes(req.query.search.toLowerCase()));
-      }
+app.get('/discover', async (req, res) => {
+    let error = null;
+    let queryParams = {
+        key: process.env.API_KEY,
+        page: '1',
+        game: 'csgo',
+        max: 100,
+        wear: req.query.wear || '', 
+        item_group: req.query.item_group || '',
+        search: req.query.search,
+    };
+    try {
+        const response = await axios({
+            url: `https://www.steamwebapi.com/steam/api/items`,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+                'Accept-Encoding': 'application/json',
+            },
+            params: queryParams
+        });
 
-      if (Array.isArray(results.data)) {
-        // Apply sorting based on the 'sort' query parameter
-        if (req.query.sort === 'High to Low') {
-            results.data.sort((a, b) => parseFloat(b.priceavg) - parseFloat(a.priceavg));
-        } else if (req.query.sort === 'Low to High') {
-            results.data.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
+        const results = response.data;
+
+        if (req.session.users && req.session.users.id) {
+            for (let item of results) {
+                const isBookmarked = await db.oneOrNone('SELECT * FROM bookmarks WHERE user_id = $1 AND product_id = $2', [req.session.users.id, item.id]);
+                item.isBookmarked = !!isBookmarked;
+            }
         }
-      }
-      //res.json({results: []});
-      res.render('pages/discover', {results: results.data, error , selectedWear: req.query.wear, selectedSort: req.query.sort, selectedCategories: req.query.item_group, searchQuery: req.query.search});
-  })
-  .catch(error => {
-      // Handle errors
-      console.error('error message: ', error.message);
-      if(error.message){
-        console.error('error results: ', error.results);
-      };
-      //res.json({error: "API call failed"});
-      res.render('pages/discover', {results: [], error: 'API call failed'});
-  });
 
-  //res.render('pages/discover');
-})
+        if (req.query.search) {
+            results = results.filter(item => item.marketname.toLowerCase().includes(req.query.search.toLowerCase()));
+        }
+
+        if (Array.isArray(results)) {
+            if (req.query.sort === 'High to Low') {
+                results.sort((a, b) => parseFloat(b.priceavg) - parseFloat(a.priceavg));
+            } else if (req.query.sort === 'Low to High') {
+                results.sort((a, b) => parseFloat(a.priceavg) - parseFloat(b.priceavg));
+            }
+        }
+
+        res.render('pages/discover', {
+            results: results,
+            error: error,
+            selectedWear: req.query.wear,
+            selectedSort: req.query.sort,
+            selectedCategories: req.query.item_group,
+            searchQuery: req.query.search
+        });
+
+    } catch (error) {
+        console.error('error message:', error.message);
+        res.render('pages/discover', { results: [], error: 'API call failed' });
+    }
+});
+
+
+// Bookmark
+
+app.post('/bookmark/:productId', async (req, res) => {
+    if (!req.session.users || !req.session.users.id) {
+        return res.redirect('/login');
+    }
+
+    const productId = req.params.productId;
+    const userId = req.session.users.id;
+
+    try {
+        // Optional: Fetch product details from external API if needed
+        const productDetails = await axios.get(`https://www.steamwebapi.com/steam/api/items/${productId}`);
+        const productName = productDetails.data.name;
+        const productImage = productDetails.data.image;
+
+        // Save the bookmark
+        await db.none('INSERT INTO bookmarks (user_id, product_id, product_name, product_image) VALUES ($1, $2, $3, $4)', 
+                      [userId, productId, productName, productImage]);
+
+        res.redirect('/discover');
+    } catch (error) {
+        console.error('Error saving bookmark:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 

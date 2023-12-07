@@ -4,21 +4,16 @@
 <div class="user-profile">
     <div class="profile-header">
         <div class="profile-picture-container">
-            <!-- Display the current profile picture or a default image -->
             <img id="profile-picture" src="<%= profilePic || '/images/skinee-logo.png' %>" alt="Profile Picture">
-
             <div class="profile-picture-overlay">
-                <!-- Upload Profile Picture Form -->
                 <form id="profilePicForm" action="/uploadProfilePic" method="POST" enctype="multipart/form-data" style="display:none;">
                     <input type="file" name="profilePic" accept="image/*" onchange="document.getElementById('profilePicForm').submit();">
                 </form>
-                <!-- Custom Upload Button -->
                 <button onclick="document.querySelector('#profilePicForm input[type=file]').click();">Upload Image</button>
             </div>
         </div>
         <div class="user-info">
-            <h2 id="user-name"><%= username %></h2> <!-- Display the username -->
-            <!-- User Description Form -->
+            <h2 id="user-name"><%= username %></h2>
             <form action="/saveDescription" method="post">
                 <textarea name="description" id="user-description" placeholder="Enter your description here...">
                     <%= userDescription || 'I like SkineeDipping' %>
@@ -28,12 +23,26 @@
         </div>
     </div>
     <div class="user-products">
-        <h2 id="user-name"> Welcome <%= username %>!</h2>        
-        <br>
+        <h2 id="user-name"> Welcome <%= username %>!</h2>
         <h3>Products I'm Following</h3>
-        <div id="products-container">
-            <!-- Products will be inserted here -->
-            <p id="no-products-message">I am too poor to buy skins</p>
+        <div id="products-container" class="row row-cols-auto">
+            <% if (bookmarks && bookmarks.length > 0) { %>
+                <% bookmarks.forEach(bookmark => { %>
+                    <div class="item">
+                        <div class="card" style="width: 18rem; background-color: rgb(96, 98, 130);">
+                            <img src="<%= bookmark.product_image %>" class="card-img-top" alt="<%= bookmark.product_name %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= bookmark.product_name %></h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="/detail_product/<%= bookmark.product_id %>" class="btn btn-primary light-grey-text">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p id="no-products-message">I am too poor to buy skins</p>
+            <% } %>
         </div>
     </div>
 </div>
