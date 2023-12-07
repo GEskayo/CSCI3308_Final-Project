@@ -11,6 +11,8 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 const sessionSecret = process.env.SESSION_SECRET;
+const multer = require('multer');
+const upload = multer({ dest: 'src/uploads/' }); // This will save files to a folder named 'uploads'
 
 // Serve static files from the 'resource' directory
 app.use(express.static(path.join(__dirname, 'init_data')));
@@ -220,26 +222,65 @@ app.get('/detail_product/:id', async (req, res) => {
 
 });
 
+// POST route for profile picture upload
+app.post('/uploadProfilePic', upload.single('profilePic'), async (req, res) => {
+  if (!req.session.users || !req.session.users.id) {
+    return res.redirect('/login'); // Redirect if not logged in
+  }
+
+  const file = req.file;
+  if (!file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  // Adjust the file path for web access
+  const webPath = file.path.replace('src/', '');
+
+  try {
+    const userId = req.session.users.id; // Get the user's ID from the session
+
+    // Check if the user already has an entry in userPage
+    const existingProfile = await db.oneOrNone('SELECT * FROM userPage WHERE user_id = $1', [userId]);
+
+    if (existingProfile) {
+      // Update the existing profile picture path
+      await db.none('UPDATE userPage SET profile_pic = $1 WHERE user_id = $2', [webPath, userId]);
+    } else {
+      // Insert a new profile picture entry
+      await db.none('INSERT INTO userPage (user_id, profile_pic) VALUES ($1, $2)', [userId, webPath]);
+    }
+
+    res.redirect('/user'); // Redirect to the user profile page
+  } catch (error) {
+    console.error('Error saving file path:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static('src/uploads'));
 
 
 app.get('/user', async (req, res) => {
   if (!req.session.users || !req.session.users.id) {
-      // Redirect to login and pass a query parameter
+      // Redirect to login if the user is not logged in
       return res.redirect('/login?redirectedFrom=user');
   }
 
   try {
-      const userDescription = await db.oneOrNone('SELECT user_desc FROM userPage WHERE user_id = $1', [req.session.users.id]);
+      // Fetch user description and profile picture from the database
+      const userProfileData = await db.oneOrNone('SELECT user_desc, profile_pic FROM userPage WHERE user_id = $1', [req.session.users.id]);
+
       res.render('pages/user', {
           username: req.session.users.username,
-          userDescription: userDescription ? userDescription.user_desc : 'I like SkineeDipping'
+          userDescription: userProfileData && userProfileData.user_desc ? userProfileData.user_desc : 'I like SkineeDipping',
+          profilePic: userProfileData && userProfileData.profile_pic ? userProfileData.profile_pic : '/images/skinee-logo.png'
       });
   } catch (error) {
-      console.error('Error fetching user description:', error);
+      console.error('Error fetching user data:', error);
       res.redirect('/login');
   }
 });
-
 
 
 app.post('/saveDescription', async (req, res) => {

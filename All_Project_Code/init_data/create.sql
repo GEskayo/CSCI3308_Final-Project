@@ -10,5 +10,6 @@ DROP TABLE IF EXISTS userPage;
 CREATE TABLE userPage (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    user_desc VARCHAR(256)
+    user_desc VARCHAR(255),
+    profile_pic VARCHAR(255)
 );
