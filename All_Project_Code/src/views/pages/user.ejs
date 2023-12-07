@@ -13,24 +13,24 @@
                     <input type="file" name="profilePic" accept="image/*" onchange="document.getElementById('profilePicForm').submit();">
                 </form>
                 <!-- Custom Upload Button -->
-                <button onclick="document.querySelector('#profilePicForm input[type=file]').click();">Upload Image</button>
+                <button class="btn btn-primary" onclick="document.querySelector('#profilePicForm input[type=file]').click();">Upload Image</button>
             </div>
         </div>
         <div class="user-info">
-            <h2 id="user-name"><%= username %></h2> <!-- Display the username -->
+            <h2 id="user-name" class="drop-shadow" style="color:lightgrey"><%= username %></h2> <!-- Display the username -->
             <!-- User Description Form -->
             <form action="/saveDescription" method="post">
-                <textarea name="description" id="user-description" placeholder="Enter your description here...">
+                <textarea name="description" style="background-color:transparent; color:lightgrey; width: 500px;" id="user-description" placeholder="Enter your description here...">
                     <%= userDescription || 'I like SkineeDipping' %>
                 </textarea>
-                <button type="submit">Save Description</button>
+                <button type="submit" class="btn btn-primary">Save Description</button>
             </form>
         </div>
     </div>
     <div class="user-products">
-        <h2 id="user-name"> Welcome <%= username %>!</h2>        
+        <h2 class="drop-shadow" style="color:lightgrey" id="user-name"> Welcome <%= username %>!</h2>        
         <br>
-        <h3>Products I'm Following</h3>
+        <h3 style="color:grey">Products I'm Following</h3>
         <div id="products-container">
             <!-- Products will be inserted here -->
             <p id="no-products-message">I am too poor to buy skins</p>
