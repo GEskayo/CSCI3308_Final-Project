@@ -21,7 +21,7 @@
 
 /* Hover and active states for buttons */
 .btn-primary:hover, .btn-primary:active {
-    background-color: #F02D3A; /* Medium blue */
+    background-color: #F02D3A;
     color: white;
 }
 
@@ -47,7 +47,7 @@ body {
 
 /* Additional styles for alert messages */
 .alert {
-    border: 2px solid #f40909; /* Larger border for alerts */
+    border: 2px solid #9197AE; /* Larger border for alerts */
 }
 
 .user-profile {
@@ -143,6 +143,31 @@ body {
     text-shadow: 0px 0px 5px #000000;
 }
 
+.text-box {
+    background-color: #000000;
+}
+
 .light-on-hover:hover {
     color: #EFF6EE;
+}
+
+.centered-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px; /* Adjust this value based on your needs */
+    overflow: hidden;
+}
+
+.carousel-item {
+    position: relative;
+    height: 500px; /* Adjust this value based on your needs */
+}
+
+.carousel-item img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 100%;
 }

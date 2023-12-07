@@ -1,7 +1,3 @@
-Decisions made
-Alternative actions/options discussed
-Follow-up items, including agreed-on roles and responsibilities You may or may not have content for each of the points above.
-
  - Discover page cards showing
  - Kaleb make Discover page fully working
     - Kaleb search implementation added to the search bar
@@ -10,3 +6,4 @@ Follow-up items, including agreed-on roles and responsibilities You may or may n
  - Bryce working on uploading photos to user profiles
  - Gil finishing User Page
  - Joey quality of life, graphics, css
+ - Getting API keys for everyone due to token loss
