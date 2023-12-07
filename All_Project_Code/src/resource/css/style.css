@@ -171,3 +171,10 @@ body {
     transform: translate(-50%, -50%);
     max-height: 100%;
 }
+
+.item-description-rows {
+    background-color: grey;
+    color: white;
+    background-color: rgb(38,38,38);
+    text-shadow: 0px 0px 5px #000000;
+}
