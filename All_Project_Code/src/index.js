@@ -423,7 +423,7 @@ app.post('/bookmark/:productId', async (req, res) => {
 
   try {
     // Fetch product details from external API
-    const response = await axios.get(`https://www.steamwebapi.com/steam/api/items/${productId}`, {
+    const response = await axios.get(`https://www.steamwebapi.com/steam/api/items/`, {
       params: {
         key: process.env.API_KEY,
         game: 'csgo'
