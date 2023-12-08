@@ -124,7 +124,7 @@ app.post('/login', async (req, res) => {
                 };
                 req.session.save(() => {
                     // Redirect based on the redirectedFrom parameter
-                    const redirectUrl = req.body.redirectedFrom === 'user' ? '/user' : '/discover';
+                    const redirectUrl = req.body.redirectedFrom === 'user' ? '/user' : '/home';
                     res.redirect(redirectUrl);
                 });
             } else {
