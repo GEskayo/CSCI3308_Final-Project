@@ -414,29 +414,49 @@ app.get('/discover', async (req, res) => {
 // Bookmark
 
 app.post('/bookmark/:productId', async (req, res) => {
-    if (!req.session.users || !req.session.users.id) {
-        return res.redirect('/login');
+  if (!req.session.users || !req.session.users.id) {
+    return res.redirect('/login');
+  }
+
+  const productId = req.params.productId;
+  const userId = req.session.users.id;
+
+  try {
+    // Fetch product details from external API
+    const response = await axios.get(`https://www.steamwebapi.com/steam/api/items/${productId}`, {
+      params: {
+        key: process.env.API_KEY,
+        game: 'csgo'
+      }
+    });
+
+    const productExists = response.data && response.data.id === productId;
+
+    if (productExists) {
+      // Check if the bookmark already exists
+      const existingBookmark = await db.oneOrNone('SELECT * FROM bookmarks WHERE user_id = $1 AND product_id = $2', [userId, productId]);
+
+      if (existingBookmark) {
+        // If the bookmark exists, remove it
+        await db.none('DELETE FROM bookmarks WHERE id = $1', [existingBookmark.id]);
+      } else {
+        // If the bookmark does not exist, add it
+        await db.none('INSERT INTO bookmarks (user_id, product_id) VALUES ($1, $2)', [userId, productId]);
+      }
+
+      res.redirect('/discover');
+    } else {
+      // Handle the case where the product is not found in the API
+      console.error('Product not found:', productId);
+      res.status(404).send('Product not found');
     }
-
-    const productId = req.params.productId;
-    const userId = req.session.users.id;
-
-    try {
-        // Optional: Fetch product details from external API if needed
-        const productDetails = await axios.get(`https://www.steamwebapi.com/steam/api/items/${productId}`);
-        const productName = productDetails.data.name;
-        const productImage = productDetails.data.image;
-
-        // Save the bookmark
-        await db.none('INSERT INTO bookmarks (user_id, product_id, product_name, product_image) VALUES ($1, $2, $3, $4)', 
-                      [userId, productId, productName, productImage]);
-
-        res.redirect('/discover');
-    } catch (error) {
-        console.error('Error saving bookmark:', error);
-        res.status(500).send('Internal Server Error');
-    }
+  } catch (error) {
+    console.error('Error handling bookmark:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
+
 
 
 

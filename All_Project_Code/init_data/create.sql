@@ -18,7 +18,6 @@ DROP TABLE IF EXISTS bookmarks;
 CREATE TABLE bookmarks (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    product_id INTEGER NOT NULL,
-    product_name VARCHAR(255) NOT NULL, -- Optional, for display purposes
-    product_image VARCHAR(255) -- Optional, for display purposes
+    product_id VARCHAR(255) NOT NULL,
+    UNIQUE(user_id, product_id)
 );
