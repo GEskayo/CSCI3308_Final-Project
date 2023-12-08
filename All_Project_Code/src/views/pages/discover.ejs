@@ -4,6 +4,12 @@
     <!-- Include the 'menu' partial with 'pageType' set to 'discover' for the navigation menu -->
     <%- include ('../partials/menu', { pageType: 'discover' }) %>
 
+    <% if (message) { %>
+        <div class="alert alert-info" role="alert">
+            <%= message %>
+        </div>
+    <% } %>
+
         <div class="container mt-5">
             <!-- Search bar section -->
             <div class="row justify-content-center mb-4">
