@@ -398,6 +398,7 @@ app.get('/discover', async (req, res) => {
         res.render('pages/discover', {
             results: results,
             error: error,
+            message: message,
             selectedWear: req.query.wear,
             selectedSort: req.query.sort,
             selectedCategories: req.query.item_group,
@@ -430,9 +431,10 @@ app.post('/bookmark/:productId', async (req, res) => {
       }
     });
 
-    const productExists = response.data && response.data.id === productId;
+    // Find the specific product
+    const product = response.data.find(item => item.id === productId);
 
-    if (productExists) {
+    if (product) {
       // Check if the bookmark already exists
       const existingBookmark = await db.oneOrNone('SELECT * FROM bookmarks WHERE user_id = $1 AND product_id = $2', [userId, productId]);
 
@@ -446,15 +448,15 @@ app.post('/bookmark/:productId', async (req, res) => {
 
       res.redirect('/discover');
     } else {
-      // Handle the case where the product is not found in the API
-      console.error('Product not found:', productId);
-      res.status(404).send('Product not found');
+      // Redirect back with a message indicating product not found
+      res.redirect('/discover?message=Product+not+found');
     }
   } catch (error) {
     console.error('Error handling bookmark:', error);
-    res.status(500).send('Internal Server Error');
+    res.redirect('/discover?message=Error+processing+your+request');
   }
 });
+
 
 
 
