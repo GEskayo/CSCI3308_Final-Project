@@ -1,6 +1,7 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu', { pageType: 'user' }) %>
 
+
 <div class="user-profile">
     <div class="profile-header">
         <div class="profile-picture-container">
@@ -31,22 +32,25 @@
         <div class="col-md-10">
             <div class="row row-cols-auto">
                 <% if (bookmarks && bookmarks.length > 0) { %>
-                    <% results.forEach(item=> { %>
+                    <% bookmarks.forEach(bookmarks => { %>
                         <div class="item">
                             <div class="card" style="width: 18rem; background-color: rgb(96, 98, 130);">
-                                <img src="<%= item.itemimage %>" class="card-img-top" alt="<%= item.marketname %>">
+                                <img src="<%= bookmarks.itemimage %>" class="card-img-top" alt="Image of skin">
                                 <div class="card-body">
-                                    <h5 class="card-title"><%= item.marketname %></h5>
-                                    <!-- Include additional details like price, type, and rarity if available -->
-                                    <p class="card-text">Average Price in USD: $<%= item.priceavg %></p>
+                                    <h5 class="card-title"><%= bookmarks.marketname %></h5>
+                                    <p class="card-text">Average Price in USD: $<%= bookmarks.priceavg %></p>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Type of Weapon: <%= item.itemtype %></li>
-                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Item Name: <%= item.itemname %></li>
-                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Rarity: <%= item.rarity %></li>
+                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Type of Weapon: <%= bookmarks.itemtype %></li>
+                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Item Name: <%= bookmarks.itemname %></li>
+                                    <li class="list-group-item" style="background-color: rgb(96, 98, 130)">Rarity: <%= bookmarks.rarity %></li>
                                 </ul>
                                 <div class="card-body">
-                                    <a href="/detail_product/<%= item.id %>" class="btn btn-primary light-grey-text">View Details</a>
+                                    <a href="detail_product/<%= bookmarks.id %>" class="btn btn-primary light-grey-text">View Details</a>
+                                    <form action="/bookmark/<%= bookmarks.id %>" method="POST">
+                                        <button type="submit"
+                                            class="btn btn-primary light-grey-text">Bookmark</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
